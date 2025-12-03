@@ -5,8 +5,6 @@ from datetime import datetime
 
 from bs4 import BeautifulSoup
 
-from jobs_hk.libs.datas import Job
-
 
 def fill_none(content: str):
     if content in ["-"]:
@@ -22,7 +20,7 @@ class JobSearchFilter:
         self.soup = BeautifulSoup(html_content, "html.parser")
 
     def get_jobs(self):
-        jobs: List[Job] = []
+        jobs: List[dict] = []
         
         job_list_table = self.soup.find("div", id="job_list_table")
         for job_table in job_list_table.find_all("div", class_="row item p-1 no-gutters"):
@@ -46,13 +44,13 @@ class JobSearchFilter:
 
             address = job_table.find("div", class_="menu_icon icon_address pb-2").get_text(strip=True)
             
-            jobs.append(Job(
-                no=no,
-                order=order,
-                name=name,
-                salary=salary,
-                address=address
-            ))
+            jobs.append({
+                "no": no,
+                "order": order,
+                "name": name,
+                "salary": salary,
+                "address": address
+            })
         
         return jobs
     
