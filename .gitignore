@@ -1,0 +1,10 @@
+# Python
+__pycache__
+dist
+.venv
+
+# VSCode
+.vscode
+
+# Project
+logs

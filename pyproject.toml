@@ -1,0 +1,13 @@
+[project]
+name = "jobs_hk"
+version = "1.0"
+dependencies = [
+    "requests",
+    "bs4",
+    "sqlalchemy",
+    "sqlmodel"
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
