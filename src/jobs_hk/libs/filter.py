@@ -19,6 +19,15 @@ class JobSearchFilter:
     def __init__(self, html_content: str | bytes):
         self.soup = BeautifulSoup(html_content, "html.parser")
 
+    def count_job_cards(self):
+        """获取的工作卡的数量"""
+        
+        total_record = self.soup.find("strong", id="totalRecord")
+        if not total_record:
+            raise Exception
+        
+        return int(total_record.get_text(strip=True))
+
     def get_jobs(self):
         jobs: List[dict] = []
         
