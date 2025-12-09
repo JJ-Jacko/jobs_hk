@@ -29,3 +29,15 @@ def web_retry(func: callable):
     
     return wrapper
 
+
+@web_retry
+def url_get_job_search(page: int = 1):
+    url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
+    params = {
+        "direct": False,
+        "page": page
+    }
+    resp = requests.get(url, params)
+
+    return resp
+
