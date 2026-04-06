@@ -41,3 +41,15 @@ def url_get_job_search(page: int = 1):
 
     return resp
 
+
+@web_retry
+def url_get_job_card(order: str):
+    url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
+    params = {
+        "order": order,
+        "from": "quickview",
+        "for": "fulltime_na"
+    }
+    resp = requests.post(url, params=params)
+
+    return resp
