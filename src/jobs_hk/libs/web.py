@@ -3,7 +3,7 @@ import requests
 from jobs_hk.libs.waiting import Waiting
 
 
-def web_retry(func: callable):
+def _web_retry(func: callable):
     """修饰 Web 请求的函数断联后尝试重连
 
     Args:
@@ -30,26 +30,32 @@ def web_retry(func: callable):
     return wrapper
 
 
-@web_retry
-def url_get_job_search(page: int = 1):
-    url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
-    params = {
-        "direct": False,
-        "page": page
-    }
-    resp = requests.get(url, params)
+class Web:
+    s = requests.session()
+    s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    
+    @classmethod
+    @_web_retry
+    def job_search(cls, page: int = 1):
+        url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
+        params = {
+            "direct": False,
+            "page": page
+        }
+        resp = cls.s.get(url, params=params)
 
-    return resp
+        return resp
 
+    @classmethod
+    @_web_retry
+    def job_card(cls, order: str):
+        url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
+        params = {
+            "order": order,
+            "from": "quickview",
+            "for": "fulltime_na"
+        }
+        resp = requests.post(url, params=params)
 
-@web_retry
-def url_get_job_card(order: str):
-    url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
-    params = {
-        "order": order,
-        "from": "quickview",
-        "for": "fulltime_na"
-    }
-    resp = requests.post(url, params=params)
-
-    return resp
+        return resp
+    
