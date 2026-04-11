@@ -73,7 +73,14 @@ class JobCardFilter:
     def get_job_info(self):
         dt_formate = "%d/%m/%Y"
         
-        num = int(self.soup.find("span", id="noVac").get_text(strip=True))
+        num_str = self.soup.find("span", id="noVac").get_text(strip=True)
+        try:
+            num = int(num_str)
+        except ValueError:
+            if num_str in ["大量"]:
+                num = 8888
+            else:
+                raise Exception
         post_date = datetime.strptime(
             self.soup.find("span", id="postedDt").get_text(strip=True),
             dt_formate
