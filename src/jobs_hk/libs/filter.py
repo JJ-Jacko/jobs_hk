@@ -45,6 +45,10 @@ class JobSearchFilter:
                 if div.get("class"):
                     continue
                 name = div.get_text(strip=True)
+                if name.endswith("**"):
+                    name_cleaned = name[:-2]
+                else:
+                    name_cleaned = name
                 break
             else:
                 raise Exception
@@ -56,7 +60,7 @@ class JobSearchFilter:
             jobs.append({
                 "no": no,
                 "order": order,
-                "name": name,
+                "name": name_cleaned,
                 "salary": salary,
                 "address": address
             })
