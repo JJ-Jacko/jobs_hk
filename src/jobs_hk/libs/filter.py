@@ -1,9 +1,10 @@
-import re
 from urllib import parse
 from typing import List
 from datetime import datetime
 
 from bs4 import BeautifulSoup
+
+from jobs_hk.libs.other import match_re
 
 
 def fill_none(content: str):
@@ -36,10 +37,7 @@ class JobSearchFilter:
             no = job_table.get("data-prev")
             
             data_jobcard: str = job_table.get("data-jobcard")
-            m = re.search(r'order=([^&]+)', data_jobcard)
-            if not m:
-                raise Exception
-            order = parse.unquote(m.group(1))
+            order = parse.unquote(match_re(r'order=([^&]+)', data_jobcard))
             
             for div in job_table.find_all("div"):
                 if div.get("class"):
