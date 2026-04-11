@@ -51,17 +51,38 @@ class JobSearchFilter:
             else:
                 raise Exception
             
-            salary = job_table.find("div", class_="menu_icon icon_salary pb-2").get_text(strip=True)
-
             address = job_table.find("div", class_="menu_icon icon_address pb-2").get_text(strip=True)
+
+            salary_src_str = job_table.find("div", class_="menu_icon icon_salary pb-2").get_text(strip=True)
+            salary_type = match_re(r'（([^&]+)）', salary_src_str)
+
+            # 范围类型
+            if salary_src_str.find("-") != -1:
+                salary_min_str = match_re(r'\$([\d,]+)', salary_src_str.split("-")[0])
+                salary_max_str = match_re(r'\$([\d,]+)', salary_src_str.split("-")[1])
+                
+                jobs.append({
+                    "no": no,
+                    "order": order,
+                    "name": name_cleaned,
+                    "salary_type": salary_type,
+                    "salary_min": int(salary_min_str.replace(',', '')),
+                    "salary_max": int(salary_max_str.replace(',', '')),
+                    "address": address
+                })
+            # 定值类型
+            else:
+                salary_str = match_re(r'\$([\d,]+)', salary_src_str)
             
-            jobs.append({
-                "no": no,
-                "order": order,
-                "name": name_cleaned,
-                "salary": salary,
-                "address": address
-            })
+                jobs.append({
+                    "no": no,
+                    "order": order,
+                    "name": name_cleaned,
+                    "salary_type": salary_type,
+                    "salary_min": int(salary_str.replace(',', '')),
+                    "salary_max": int(salary_str.replace(',', '')),
+                    "address": address
+                })
         
         return jobs
     

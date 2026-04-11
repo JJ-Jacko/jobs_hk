@@ -11,7 +11,9 @@ class Job(SQLModel, table=True):
 
     order: Optional[str] = Field(default=None, primary_key=True)
     name: Optional[str] = Field(default=None)
-    salary: Optional[str] = Field(default=None)
+    salary_type: Optional[str] = Field(default=None)
+    salary_min: Optional[int] = Field(default=None)
+    salary_max: Optional[int] = Field(default=None)
     address: Optional[str] = Field(default=None)
     company_name: Optional[str] = Field(default=None, foreign_key="companies.name")
     job_remark: Optional[str] = Field(default=None)
