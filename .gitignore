@@ -8,4 +8,6 @@ uv.lock
 .vscode
 
 # Project
+test
 logs
+data.db
