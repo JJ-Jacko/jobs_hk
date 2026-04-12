@@ -137,3 +137,12 @@ class DB:
                 s.add(Job(order=order, **updates))
             
             s.commit()
+    
+    @_db_retry
+    def get_job_without_detailed(self):
+        with Session(self.engine) as s:
+            job = s.exec(select(Job).where(
+                Job.company == None
+            )).first()
+            
+            return job
