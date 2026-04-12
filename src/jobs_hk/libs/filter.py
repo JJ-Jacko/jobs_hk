@@ -19,6 +19,16 @@ class JobSearchFilter:
     
     def __init__(self, html_content: str | bytes):
         self.soup = BeautifulSoup(html_content, "html.parser")
+        
+    def get_total_pages(self):
+        """获取总页数"""
+        
+        a = self.soup.find("a", title="跳至最後一頁")
+        if not a:
+            raise Exception
+        href = a.get("href")
+        
+        return int(match_re(r'page=(\d+)', href))
 
     def count_job_cards(self):
         """获取的工作卡的数量"""
