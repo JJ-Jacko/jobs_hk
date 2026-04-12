@@ -58,15 +58,20 @@ class DB:
     def save_company(
             self,
             name: str,
-            industry: str
+            industry: str = _UNSET
     ):
+        payload = {
+            "industry": industry
+        }
+        updates = _get_fields_setted(payload)
+    
         with Session(self.engine) as s:
             company = s.get(Company, name)
-            if company is None:
-                s.add(Company(
-                    name=name,
-                    industry=industry
-                ))
+            if company:
+                for field, value in updates.items():
+                    setattr(company, field, value)
+            else:
+                s.add(Company(name=name, **updates))
             
             s.commit()
     
