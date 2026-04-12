@@ -118,6 +118,7 @@ class JobCardFilter:
         openup_remark = self.soup.find("span", id="openupRemark").get_text(strip=True)
         email = match_re(r'([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})', openup_remark)
         phone = match_re(r'(\d{8})', openup_remark)
+        phone_formated = f"{phone[:4]} {phone[4:]}" if phone else None
         alias = match_re(r'(\S(?:先生|小姐|女士))', openup_remark)
         
         prop_remark = fill_none(self.soup.find("span", id="propRemark").get_text(strip=True))
@@ -132,7 +133,7 @@ class JobCardFilter:
             "edu_remark": edu_remark,
             "compensation": compensation,
             "email": email,
-            "phone": phone,
+            "phone": phone_formated,
             "alias": alias,
             "prop_remark": prop_remark
         }
