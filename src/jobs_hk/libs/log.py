@@ -2,7 +2,7 @@
 import logging
 import logging.handlers
 from pathlib import Path
-from datetime import datetime
+from datetime import datetime as DateTime
 
 
 formatter = logging.Formatter(
@@ -23,7 +23,7 @@ def get_logger(name: str):
     
     log_dir = Path("logs")
     log_dir.mkdir(parents=True, exist_ok=True)
-    log_file = log_dir / f"{name}_{datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
+    log_file = log_dir / f"{name}_{DateTime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
     file_handler = logging.handlers.RotatingFileHandler(log_file)
     file_handler.setLevel(logging.INFO)
     file_handler.setFormatter(formatter)

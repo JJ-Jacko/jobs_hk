@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime as DateTime
 
 from bs4 import BeautifulSoup
 
@@ -23,7 +23,7 @@ class JobCardFilter:
                 num = 8888
             else:
                 raise Exception
-        post_date = datetime.strptime(
+        post_date = DateTime.strptime(
             self.soup.find("span", id="postedDt").get_text(strip=True),
             dt_formate
         ).date()
