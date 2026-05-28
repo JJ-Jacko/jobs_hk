@@ -1,5 +1,3 @@
-from typing import Dict
-
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import OperationalError
 from sqlmodel import select
@@ -8,10 +6,9 @@ from sqlmodel import Session
 from jobs_hk.libs.datas import Company
 from jobs_hk.libs.datas import Contact
 from jobs_hk.libs.datas import Job
+from jobs_hk.libs.other import get_fields_setted
 from jobs_hk.libs.waiting import Waiting
-
-
-_UNSET = object()
+from jobs_hk.types import UNSET
 
 
 def _db_retry(func: callable):
@@ -40,14 +37,6 @@ def _db_retry(func: callable):
     return wrapper
 
 
-def _get_fields_setted(payload: Dict[str, any]):
-    return {
-        k: v
-        for k, v in payload.items()
-        if v is not _UNSET
-    }
-
-
 class DB:
     engine: Engine
     
@@ -58,12 +47,12 @@ class DB:
     def save_company(
             self,
             name: str,
-            industry: str = _UNSET
+            industry: str = UNSET
     ):
         payload = {
             "industry": industry
         }
-        updates = _get_fields_setted(payload)
+        updates = get_fields_setted(payload)
     
         with Session(self.engine) as s:
             company = s.get(Company, name)
@@ -101,17 +90,17 @@ class DB:
     def save_job(
             self,
             order: str,
-            name: str = _UNSET,
-            salary_type: str = _UNSET,
-            salary_min: int = _UNSET,
-            salary_max: int = _UNSET,
-            address: str = _UNSET,
-            company_name: str = _UNSET,
-            job_remark: str = _UNSET,
-            edu_remark: str = _UNSET,
-            contact_alias: str = _UNSET,
-            prop_remark: str = _UNSET,
-            compensation: str = _UNSET
+            name: str = UNSET,
+            salary_type: str = UNSET,
+            salary_min: int = UNSET,
+            salary_max: int = UNSET,
+            address: str = UNSET,
+            company_name: str = UNSET,
+            job_remark: str = UNSET,
+            edu_remark: str = UNSET,
+            contact_alias: str = UNSET,
+            prop_remark: str = UNSET,
+            compensation: str = UNSET
     ):
         payload = {
             "name": name,
@@ -126,7 +115,7 @@ class DB:
             "prop_remark": prop_remark,
             "compensation": compensation
         }
-        updates = _get_fields_setted(payload)
+        updates = get_fields_setted(payload)
 
         with Session(self.engine) as s:
             job = s.get(Job, order)
