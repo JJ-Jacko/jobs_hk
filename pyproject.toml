@@ -9,8 +9,8 @@ dependencies = [
 ]
 
 [project.scripts]
-run-search-job = "jobs_hk.main:search"
-run-fill-job = "jobs_hk.main:fill"
+run-search-job = "jobs_hk.cli.search_jobs:run"
+run-fill-job = "jobs_hk.cli.fill_jobs:run"
 
 [build-system]
 requires = ["hatchling"]
