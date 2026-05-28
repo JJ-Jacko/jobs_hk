@@ -19,3 +19,10 @@ def match_re(pattern: str, src_str: str):
         return None
     
     return m.group(1)
+
+
+def fill_none(content: str):
+    if content in ["-"]:
+        return None
+    else:
+        content
