@@ -1,24 +1,26 @@
-"""日志库"""
+"""Logging utils"""
+
 import logging
 import logging.handlers
 from pathlib import Path
 from datetime import datetime as DateTime
 
 
-formatter = logging.Formatter(
+_formatter = logging.Formatter(
     fmt="%(asctime)s - %(levelname)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S"
 )
 
 
-def get_logger(name: str):
-    """获取 logger
-
+def get_logger(
+        name: str,
+        console: bool = True,
+        file: bool = True
+):
+    """
     Args:
-        name (str): 日志名字
-
-    Returns:
-        logger (Logger): 日志
+        console: output to console 输出到控制台
+        file: output to file 输出到文件
     """
     
     log_dir = Path("logs")
@@ -26,15 +28,17 @@ def get_logger(name: str):
     log_file = log_dir / f"{name}_{DateTime.now().strftime("%Y-%m-%d_%H-%M-%S")}.log"
     file_handler = logging.handlers.RotatingFileHandler(log_file)
     file_handler.setLevel(logging.INFO)
-    file_handler.setFormatter(formatter)
+    file_handler.setFormatter(_formatter)
 
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(formatter)
+    console_handler.setFormatter(_formatter)
 
     logger = logging.getLogger(name)
     logger.setLevel(logging.INFO)
-    logger.addHandler(file_handler)
-    logger.addHandler(console_handler)
+    if console:
+        logger.addHandler(console_handler)
+    if file:
+        logger.addHandler(file_handler)
     
     return logger
