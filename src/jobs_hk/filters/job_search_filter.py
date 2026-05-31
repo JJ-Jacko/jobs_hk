@@ -3,7 +3,7 @@ from typing import List
 
 from bs4 import BeautifulSoup
 
-from jobs_hk.libs.other import match_re
+from jobs_hk.other import match_re
 
 
 class JobSearchFilter:

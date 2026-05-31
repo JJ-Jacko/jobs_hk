@@ -1,8 +1,8 @@
 import jobs_hk.cli.context as context
 from jobs_hk.filters.job_card_filter import JobCardFilter
-from jobs_hk.libs.log import get_logger
-from jobs_hk.libs.waiting import Waiting
-from jobs_hk.libs.web import Web
+from jobs_hk.log import get_logger
+from jobs_hk.waiting import Waiting
+from jobs_hk.web import Web
 
 
 def run():

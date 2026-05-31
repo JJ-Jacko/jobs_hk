@@ -2,8 +2,8 @@ from datetime import datetime as DateTime
 
 from bs4 import BeautifulSoup
 
-from jobs_hk.libs.other import match_re
-from jobs_hk.libs.other import fill_none
+from jobs_hk.other import match_re
+from jobs_hk.other import fill_none
 
 
 class JobCardFilter:

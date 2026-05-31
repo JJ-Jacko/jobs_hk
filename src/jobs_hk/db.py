@@ -3,11 +3,11 @@ from sqlalchemy.exc import OperationalError
 from sqlmodel import select
 from sqlmodel import Session
 
-from jobs_hk.libs.datas import Company
-from jobs_hk.libs.datas import Contact
-from jobs_hk.libs.datas import Job
-from jobs_hk.libs.other import get_fields_setted
-from jobs_hk.libs.waiting import Waiting
+from jobs_hk.datas import Company
+from jobs_hk.datas import Contact
+from jobs_hk.datas import Job
+from jobs_hk.other import get_fields_setted
+from jobs_hk.waiting import Waiting
 from jobs_hk.types import UNSET
 
 

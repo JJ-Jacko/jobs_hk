@@ -1,9 +1,9 @@
 from sqlalchemy.engine import Engine
 from sqlmodel import create_engine
 
-from jobs_hk.libs.datas import Job
-from jobs_hk.libs.datas import Company
-from jobs_hk.libs.datas import Contact
+from jobs_hk.datas import Job
+from jobs_hk.datas import Company
+from jobs_hk.datas import Contact
 
 
 def get_engine(file: str = "data.db"):
