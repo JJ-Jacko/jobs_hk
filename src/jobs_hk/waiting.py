@@ -1,10 +1,10 @@
+"""Waiting related classes and functions"""
+
 import random
 import time
 
 
 class Waiting:
-    """等待相关的类"""
-    
     _large_cycle_time_min: int = None
     _large_cycle_time_max: int = None
     _small_cycle_time_min: int = None
@@ -29,15 +29,15 @@ class Waiting:
             small_cycle_min: int = 5,
             small_cycle_max: int = 15
     ):
-        """配置
+        """Configure the waiting cycles 配置等待循环
         
         Args:
-            large_cycle_time_min (int): 大循环间隔的最小值
-            large_cycle_time_max (int): 大循环间隔的最大值
-            small_cycle_time_min (int): 小循环间隔的最小值
-            small_cycle_time_max (int): 小循环间隔的最大值
-            small_cycle_min (int): 小循环次数的最小值
-            small_cycle_max (int): 小循环次数的最大值
+            large_cycle_time_min: Minimum interval for large cycle 大循环间隔的最小值
+            large_cycle_time_max: Maximum interval for large cycle 大循环间隔的最大值
+            small_cycle_time_min: Minimum interval for small cycle 小循环间隔的最小值
+            small_cycle_time_max: Maximum interval for small cycle 小循环间隔的最大值
+            small_cycle_min: Minimum number of small cycles 小循环次数的最小值
+            small_cycle_max: Maximum number of small cycles 小循环次数的最大值
         """
 
         cls._large_cycle_time_min = large_cycle_time_min
@@ -53,20 +53,19 @@ class Waiting:
     def normal(
             cls,
             waiting_time: int,
-            prompt: str = "等待 [n] 秒"
+            prompt: str = "Waiting in [n]s"
     ):
-        """按照提示词输出倒计时并等待
+        """Output a countdown according to the prompt and wait for the specified time 按照提示词输出倒计时并等待
 
         Args:
-            waiting_time (int): 倒计时长
-            prompt (str): 提示词
+            waiting_time: Countdown duration 倒计时长
             
         Examples:
             1.
             >>> Waiting.normal(3)
-            等待 3 秒
-            等待 2 秒
-            等待 1 秒
+            Waiting in 3s
+            Waiting in 2s
+            Waiting in 1s
             
             2.
             >>> Waiting.normal(3, "[n] 秒后运行")
@@ -84,24 +83,24 @@ class Waiting:
 
     @classmethod
     def random(cls):
-        """按照提示词输出大小循环的倒计时并等待
+        """Perform a random wait based on the configured cycles 按照提示词输出大小循环的倒计时并等待
 
         Args:
         
         Examples:
-            1. 默认
+            1. Default configuration 默认配置
             >>> Waiting.random()
-            小循环 剩余 5 轮 等待 10 秒
+            Small cycle remaining 5 rounds waiting in 10s
             . . .
-            小循环 剩余 0 轮 等待 0 秒
-            大循环 等待 1800 秒
-            小循环 剩余 15 轮 等待 20 秒
+            Small cycle remaining 0 rounds waiting in 0s
+            Large cycle waiting in 1800s
+            Small cycle remaining 15 rounds waiting in 20s
             . . .
-            小循环 剩余 0 轮 等待 0 秒
-            大循环 等待 3600 秒
+            Small cycle remaining 0 rounds waiting in 0s
+            Large cycle waiting in 3600s
             . . . . . .
             
-            2. 使用配置
+            2. Custom configuration 自定义配置
             >>> Waiting.set_up(
             ...     large_cycle_time_min=5 * 60,
             ...     large_cycle_time_max=10 * 60,
@@ -111,14 +110,14 @@ class Waiting:
             ...     small_cycle_max=5
             ... )
             >>> Waiting.random()
-            小循环 剩余 2 轮 等待 1 秒
+            Small cycle remaining 2 rounds waiting in 1s
             . . .
-            小循环 剩余 0 轮 等待 0 秒
-            大循环 等待 300 秒
-            小循环 剩余 2 轮 等待 5 秒
+            Small cycle remaining 0 rounds waiting in 0s
+            Large cycle waiting in 300s
+            Small cycle remaining 2 rounds waiting in 5s
             . . .
-            小循环 剩余 0 轮 等待 0 秒
-            大循环 等待 600 秒
+            Small cycle remaining 0 rounds waiting in 0s
+            Large cycle waiting in 600s
             . . . . . .
         """
 
@@ -129,13 +128,13 @@ class Waiting:
             cls.__reload_small_cycle(cls)
             cls.normal(
                 random.randint(cls._large_cycle_time_min, cls._large_cycle_time_max),
-                "大循环 等待 [n] 秒"
+                "Large cycle waiting in [n]s"
             )
         
         cls._small_cycle -= 1
         cls.normal(
             random.randint(cls._small_cycle_time_min, cls._small_cycle_time_max),
-            f"小循环 剩余 {cls._small_cycle} 轮 等待 [n] 秒"
+            f"Small cycle remaining {cls._small_cycle} rounds waiting in [n]s"
         )
       
      
