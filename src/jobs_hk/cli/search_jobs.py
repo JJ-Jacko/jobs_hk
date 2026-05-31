@@ -1,3 +1,5 @@
+import itertools
+
 import jobs_hk.cli.context as context
 from jobs_hk.filters.job_search_filter import JobSearchFilter
 from jobs_hk.log import get_logger
@@ -9,8 +11,7 @@ def run():
     logger = get_logger("search")
     Waiting.set_up(10, 20, 5, 15)
     
-    page = 1
-    while True:
+    for page in itertools.count(1):
         logger.info(f"Processing page: {page}")
         
         resp = Web.job_search(page)
@@ -30,5 +31,5 @@ def run():
         
         if page > total_pages:
             break
-        page += 1
+        
         Waiting.random()
