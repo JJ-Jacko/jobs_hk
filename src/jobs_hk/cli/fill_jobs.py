@@ -7,7 +7,7 @@ from jobs_hk.web import JobGovHK
 
 def run():
     logger = get_logger("fill")
-    Waiting.set_up(10, 20, 3, 8)
+    waiting = Waiting()
     web = JobGovHK()
     
     while (job := context.db.get_job_without_detailed()):
@@ -36,4 +36,4 @@ def run():
             compensation=job_info["compensation"]
         )
         
-        Waiting.random()
+        waiting.random()

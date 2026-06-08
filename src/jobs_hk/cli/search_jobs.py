@@ -9,7 +9,7 @@ from jobs_hk.web import JobGovHK
 
 def run():
     logger = get_logger("search")
-    Waiting.set_up(10, 20, 5, 15)
+    waiting = Waiting()
     web = JobGovHK()
     
     for page in itertools.count(1):
@@ -33,4 +33,4 @@ def run():
         if page > total_pages:
             break
         
-        Waiting.random()
+        waiting.random()
