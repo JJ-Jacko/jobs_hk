@@ -16,8 +16,8 @@ class Waiting:
 
     def __init__(
             self,
-            large_cycle_time_min: int = 30 * 60,
-            large_cycle_time_max: int = 60 * 60,
+            large_cycle_time_min: int = 1 * 60,
+            large_cycle_time_max: int = 2 * 60,
             small_cycle_time_min: int = 10,
             small_cycle_time_max: int = 20,
             small_cycle_min: int = 5,
