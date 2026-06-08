@@ -23,15 +23,29 @@ class Waiting:
             small_cycle_min: int = 5,
             small_cycle_max: int = 15
     ):
-        """Configure the waiting cycles 配置等待循环
+        """
+        Configure the waiting cycles
+        配置等待循环
         
         Args:
-            large_cycle_time_min: Minimum interval for large cycle 大循环间隔的最小值
-            large_cycle_time_max: Maximum interval for large cycle 大循环间隔的最大值
-            small_cycle_time_min: Minimum interval for small cycle 小循环间隔的最小值
-            small_cycle_time_max: Maximum interval for small cycle 小循环间隔的最大值
-            small_cycle_min: Minimum number of small cycles 小循环次数的最小值
-            small_cycle_max: Maximum number of small cycles 小循环次数的最大值
+            large_cycle_time_min:
+                Minimum interval for large cycle
+                大循环间隔的最小值
+            large_cycle_time_max:
+                Maximum interval for large cycle
+                大循环间隔的最大值
+            small_cycle_time_min:
+                Minimum interval for small cycle
+                小循环间隔的最小值
+            small_cycle_time_max:
+                Maximum interval for small cycle
+                小循环间隔的最大值
+            small_cycle_min:
+                Minimum number of small cycles
+                小循环次数的最小值
+            small_cycle_max:
+                Maximum number of small cycles
+                小循环次数的最大值
         """
 
         self.large_cycle_time_min = large_cycle_time_min
@@ -54,20 +68,24 @@ class Waiting:
             waiting_time: int,
             prompt: str = "Waiting in [n]s"
     ):
-        """Output a countdown according to the prompt and wait for the specified time 按照提示词输出倒计时并等待
+        """
+        Output a countdown according to the prompt and wait for the specified time
+        按照提示词输出倒计时并等待
 
         Args:
-            waiting_time: Countdown duration 倒计时长
+            waiting_time:
+                Countdown duration
+                倒计时长
             
         Examples:
             1.
-            >>> Waiting.normal(3)
+            >>> waiting.normal(3)
             Waiting in 3s
             Waiting in 2s
             Waiting in 1s
             
             2.
-            >>> Waiting.normal(3, "[n] 秒后运行")
+            >>> waiting.normal(3, "[n] 秒后运行")
             3 秒后运行
             2 秒后运行
             1 秒后运行
@@ -81,13 +99,16 @@ class Waiting:
             print(' ' * len(content), end="\r")
 
     def random(self):
-        """Perform a random wait based on the configured cycles 按照提示词输出大小循环的倒计时并等待
+        """
+        Perform a random wait based on the configured cycles
+        按照提示词输出大小循环的倒计时并等待
 
         Args:
         
         Examples:
             1. Default configuration 默认配置
-            >>> Waiting.random()
+            >>> waiting = Waiting()
+            >>> waiting.random()
             Small cycle remaining 5 rounds waiting in 10s
             . . .
             Small cycle remaining 0 rounds waiting in 0s
@@ -99,7 +120,7 @@ class Waiting:
             . . . . . .
             
             2. Custom configuration 自定义配置
-            >>> Waiting.set_up(
+            >>> waiting = Waiting(
             ...     large_cycle_time_min=5 * 60,
             ...     large_cycle_time_max=10 * 60,
             ...     small_cycle_time_min=1,
@@ -107,7 +128,7 @@ class Waiting:
             ...     small_cycle_min=2,
             ...     small_cycle_max=5
             ... )
-            >>> Waiting.random()
+            >>> waiting.random()
             Small cycle remaining 2 rounds waiting in 1s
             . . .
             Small cycle remaining 0 rounds waiting in 0s
@@ -131,5 +152,3 @@ class Waiting:
             random.randint(self.small_cycle_time_min, self.small_cycle_time_max),
             f"Small cycle remaining {self.small_cycle} rounds waiting in [n]s"
         )
-      
-     
