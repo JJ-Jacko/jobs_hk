@@ -5,23 +5,17 @@ import time
 
 
 class Waiting:
-    _large_cycle_time_min: int = None
-    _large_cycle_time_max: int = None
-    _small_cycle_time_min: int = None
-    _small_cycle_time_max: int = None
-    _small_cycle_min: int = None
-    _small_cycle_max: int = None
-    _small_cycle: int = None
+    large_cycle_time_min: int
+    large_cycle_time_max: int
+    small_cycle_time_min: int
+    small_cycle_time_max: int
+    small_cycle_min: int
+    small_cycle_max: int
+    
+    small_cycle: int
 
-    def __reload_small_cycle(cls):
-        cls._small_cycle = random.randint(
-            cls._small_cycle_min,
-            cls._small_cycle_max
-        )
-
-    @classmethod
-    def set_up(
-            cls,
+    def __init__(
+            self,
             large_cycle_time_min: int = 30 * 60,
             large_cycle_time_max: int = 60 * 60,
             small_cycle_time_min: int = 10,
@@ -40,18 +34,23 @@ class Waiting:
             small_cycle_max: Maximum number of small cycles 小循环次数的最大值
         """
 
-        cls._large_cycle_time_min = large_cycle_time_min
-        cls._large_cycle_time_max = large_cycle_time_max
-        cls._small_cycle_time_min = small_cycle_time_min
-        cls._small_cycle_time_max = small_cycle_time_max
-        cls._small_cycle_min = small_cycle_min
-        cls._small_cycle_max = small_cycle_max
+        self.large_cycle_time_min = large_cycle_time_min
+        self.large_cycle_time_max = large_cycle_time_max
+        self.small_cycle_time_min = small_cycle_time_min
+        self.small_cycle_time_max = small_cycle_time_max
+        self.small_cycle_min = small_cycle_min
+        self.small_cycle_max = small_cycle_max
         
-        cls.__reload_small_cycle(cls)
+        self.__reload_small_cycle()
 
-    @classmethod
+    def __reload_small_cycle(self):
+        self.small_cycle = random.randint(
+            self.small_cycle_min,
+            self.small_cycle_max
+        )
+
     def normal(
-            cls,
+            self,
             waiting_time: int,
             prompt: str = "Waiting in [n]s"
     ):
@@ -81,8 +80,7 @@ class Waiting:
             time.sleep(1)
             print(' ' * len(content), end="\r")
 
-    @classmethod
-    def random(cls):
+    def random(self):
         """Perform a random wait based on the configured cycles 按照提示词输出大小循环的倒计时并等待
 
         Args:
@@ -121,20 +119,17 @@ class Waiting:
             . . . . . .
         """
 
-        if cls._small_cycle is None:
-            cls.set_up()
-        
-        if cls._small_cycle < 1:
-            cls.__reload_small_cycle(cls)
-            cls.normal(
-                random.randint(cls._large_cycle_time_min, cls._large_cycle_time_max),
+        if self.small_cycle < 1:
+            self.__reload_small_cycle()
+            self.normal(
+                random.randint(self.large_cycle_time_min, self.large_cycle_time_max),
                 "Large cycle waiting in [n]s"
             )
         
-        cls._small_cycle -= 1
-        cls.normal(
-            random.randint(cls._small_cycle_time_min, cls._small_cycle_time_max),
-            f"Small cycle remaining {cls._small_cycle} rounds waiting in [n]s"
+        self.small_cycle -= 1
+        self.normal(
+            random.randint(self.small_cycle_time_min, self.small_cycle_time_max),
+            f"Small cycle remaining {self.small_cycle} rounds waiting in [n]s"
         )
       
      
