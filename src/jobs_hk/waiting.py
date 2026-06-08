@@ -98,13 +98,14 @@ class Waiting:
             time.sleep(1)
             print(' ' * len(content), end="\r")
 
-    def random(self):
+    def random(
+            self,
+            show_info: bool = True
+    ):
         """
         Perform a random wait based on the configured cycles
         按照提示词输出大小循环的倒计时并等待
 
-        Args:
-        
         Examples:
             1. Default configuration 默认配置
             >>> waiting = Waiting()
@@ -142,13 +143,17 @@ class Waiting:
 
         if self.small_cycle < 1:
             self.__reload_small_cycle()
-            self.normal(
-                random.randint(self.large_cycle_time_min, self.large_cycle_time_max),
-                "Large cycle waiting in [n]s"
-            )
+            large_cycle_time = random.randint(self.large_cycle_time_min, self.large_cycle_time_max)
+            if show_info:
+                self.normal(large_cycle_time, "Large cycle waiting in [n]s")
+            else:
+                time.sleep(large_cycle_time)
         
+        small_cycle_time = random.randint(self.small_cycle_time_min, self.small_cycle_time_max)
+        if show_info:
+            self.normal(small_cycle_time, f"Small cycle remaining {self.small_cycle} rounds waiting in [n]s")
+        else:
+            time.sleep(small_cycle_time)
+
         self.small_cycle -= 1
-        self.normal(
-            random.randint(self.small_cycle_time_min, self.small_cycle_time_max),
-            f"Small cycle remaining {self.small_cycle} rounds waiting in [n]s"
-        )
+        
