@@ -38,32 +38,45 @@ def _web_retry(func):
     return wrapper
 
 
-class Web:
-    s = requests.session()
-    s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+class JobGovHK:
+    s: requests.Session
     
-    @classmethod
+    def __init__(
+            self,
+            proxy_host: str = None,
+            proxy_port: int = None
+    ):
+        self.s = requests.session()
+        
+        self.s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+        
+        if all((proxy_host, proxy_port)):
+            proxy_url = f"http://{proxy_host}:{proxy_port}"        
+            self.s.proxies = {
+                "http": proxy_url,
+                "https": proxy_url,
+            }
+    
     @_web_retry
-    def job_search(cls, page: int = 1):
+    def job_search(self, page: int = 1):
         url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
         params = {
             "direct": False,
             "page": page
         }
-        resp = cls.s.get(url, params=params)
+        resp = self.s.get(url, params=params)
 
         return resp
 
-    @classmethod
     @_web_retry
-    def job_card(cls, order: str):
+    def job_card(self, order: str):
         url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
         params = {
             "order": order,
             "from": "quickview",
             "for": "fulltime_na"
         }
-        resp = requests.post(url, params=params)
+        resp = self.s.post(url, params=params)
 
         return resp
     

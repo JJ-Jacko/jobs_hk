@@ -2,17 +2,18 @@ import jobs_hk.cli.context as context
 from jobs_hk.filters.job_card_filter import JobCardFilter
 from jobs_hk.log import get_logger
 from jobs_hk.waiting import Waiting
-from jobs_hk.web import Web
+from jobs_hk.web import JobGovHK
 
 
 def run():
     logger = get_logger("fill")
     Waiting.set_up(10, 20, 3, 8)
+    web = JobGovHK()
     
     while (job := context.db.get_job_without_detailed()):
         logger.info(f"Processing job: {job.name}")
         
-        resp = Web.job_card(job.order)
+        resp = web.job_card(job.order)
         cf = JobCardFilter(resp.text)
         job_info = cf.get_job_info()
 
