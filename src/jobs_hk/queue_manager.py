@@ -109,3 +109,29 @@ class Queue:
         
         task.date_time = DateTime.now().astimezone()
         self.tasks[task_key] = task
+
+
+class QueueMT(Queue):
+    """Queue Multi Thread Support"""
+    
+    lock: threading.Lock
+    
+    def __init__(
+            self,
+            tasks: Iterable[Task],
+            lock: threading.Lock
+    ):
+        super().__init__(tasks)
+        self.lock = lock
+    
+    @thread_lock
+    def get_pendding_task_key(self):
+        return super().get_pendding_task_key()
+    
+    @thread_lock
+    def set_task_status(self, status, task_key):
+        return super().set_task_status(status, task_key)
+    
+    @thread_lock
+    def set_task_date_time(self, task_key):
+        return super().set_task_date_time(task_key)
