@@ -5,7 +5,10 @@ import time
 import requests
 
 
-def _web_retry(func):
+__all__ = ["JobGovHK"]
+
+
+def web_retry(func):
     """Decorator for retrying web operations in case of disconnection 修饰 Web 请求的函数断联后尝试重连
 
     Raises:
@@ -57,7 +60,7 @@ class JobGovHK:
                 "https": proxy_url,
             }
     
-    @_web_retry
+    @web_retry
     def job_search(self, page: int = 1):
         url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
         params = {
@@ -68,7 +71,7 @@ class JobGovHK:
 
         return resp
 
-    @_web_retry
+    @web_retry
     def job_card(self, order: str):
         url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
         params = {

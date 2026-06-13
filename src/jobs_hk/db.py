@@ -13,7 +13,10 @@ from jobs_hk.waiting import Waiting
 from jobs_hk.types import UNSET
 
 
-def _db_retry(func):
+__all__ = ["DB"]
+
+
+def db_retry(func):
     """Decorator for retrying database operations in case of disconnection 修饰访问数据库的函数断联后尝试重连
 
     Raises:
@@ -43,7 +46,7 @@ class DB:
     def __init__(self, engine: Engine):
         self.engine = engine
     
-    @_db_retry
+    @db_retry
     def save_company(
             self,
             name: str,
@@ -64,7 +67,7 @@ class DB:
             
             s.commit()
     
-    @_db_retry
+    @db_retry
     def save_contact(
             self,
             alias: str,
@@ -86,7 +89,7 @@ class DB:
             
             s.commit()
             
-    @_db_retry
+    @db_retry
     def save_job(
             self,
             order: str,
@@ -127,7 +130,7 @@ class DB:
             
             s.commit()
 
-    @_db_retry
+    @db_retry
     def get_jobs_without_detailed(self):
         with Session(self.engine) as s:
             jobs = s.exec(select(Job).where(
