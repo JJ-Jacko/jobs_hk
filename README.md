@@ -16,6 +16,12 @@ The scraper fetches job listing pages via Python's `requests` library, parses HT
 uv sync
 source .venv/bin/activate
 ```
+`config.toml`
+```toml
+[ollama]
+host = "192.168.6.101"
+model = "qwen2.5-coder:7b"
+```
 
 ### Run
 #### Search Job Listings

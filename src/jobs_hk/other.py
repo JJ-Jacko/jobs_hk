@@ -1,4 +1,6 @@
 import re
+import tomllib
+from pathlib import Path
 from typing import Dict
 
 from jobs_hk.types import UNSET
@@ -26,3 +28,8 @@ def fill_none(content: str):
         return None
     else:
         content
+
+
+def load_config(p: Path):
+    with p.open("rb") as f:
+        return tomllib.load(f)

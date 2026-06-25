@@ -16,6 +16,12 @@
 uv sync
 source .venv/bin/activate
 ```
+`config.toml`
+```toml
+[ollama]
+host = "192.168.6.101"
+model = "qwen2.5-coder:7b"
+```
 
 ### 執行
 #### 搜尋職缺資訊
