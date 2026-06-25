@@ -5,7 +5,9 @@ dependencies = [
     "requests",
     "bs4",
     "sqlalchemy",
-    "sqlmodel"
+    "sqlmodel",
+    "pydantic",
+    "ollama",
 ]
 
 [project.scripts]

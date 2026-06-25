@@ -14,6 +14,8 @@ __all__ = [
 
 # Path
 project_config_p = Path("config.toml")
+prompts_p = Path("prompts")
+sql_generator_sqlite_only_p = prompts_p / "sql_generator_sqlite_only.md"
 
 # Initialization
 project_config = load_config(project_config_p)
