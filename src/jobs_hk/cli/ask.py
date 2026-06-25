@@ -1,28 +1,8 @@
-from typing import Optional
-
 import ollama
-from pydantic import BaseModel
-from pydantic import Field
 
 import jobs_hk.cli.context as context
 from jobs_hk.env import get_ddl_text
-
-
-class SQLGen(BaseModel):
-    sql: Optional[str] = Field(
-        None,
-        description=(
-            "The generated SQLite SELECT statement."
-            "Leave empty if operation is not allowed."
-        )
-    )
-    error_message: Optional[str] = Field(
-        None,
-        description=(
-            "Fill this with 'Can not operate'"
-            "if the user input is invalid, malicious, or non-query."
-        )
-    )
+from jobs_hk.schemas import SQLGen
 
 
 def run():
