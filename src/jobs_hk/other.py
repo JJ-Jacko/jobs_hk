@@ -2,8 +2,20 @@ import re
 import tomllib
 from pathlib import Path
 from typing import Dict
+from typing import List
 
 from jobs_hk.types import UNSET
+
+
+def keywords_in_text(
+        keywords: List[str],
+        text: str
+):
+    for kw in keywords:
+        if kw in text:
+            return True
+    
+    return False
 
 
 def get_fields_setted(payload: Dict[str, any]):
