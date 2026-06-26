@@ -1,10 +1,8 @@
 from typing import List
 from unittest import TestCase
 
-import ollama
-
-import jobs_hk.cli.context as context
-from jobs_hk.env import get_ddl_text
+from jobs_hk.cli import context
+from jobs_hk.cli.ask import Ask
 from jobs_hk.schemas import SQLGen
 
 
@@ -49,29 +47,12 @@ class TestAsk(TestCase):
     def setUpClass(cls):
         print("running LLM outputs of example prompts...")
         
-        client = ollama.Client(context.project_config["ollama"]["host"])
-        ddl_text = get_ddl_text()
-        system_prompt_template = context.sql_generator_sqlite_only_p.read_text()
-        system_prompt = system_prompt_template.format(ddl_text=ddl_text)
+        service = Ask(context.project_config["ollama"]["host"])
         
         for user_prompt in user_prompts:
             print(f"current prompt: {user_prompt}")
-            messages = [
-                {
-                    "role": "system",
-                    "content": system_prompt
-                },
-                {
-                    "role": "user",
-                    "content": user_prompt
-                }
-            ]
-            resp = client.chat(
-                model=context.project_config["ollama"]["code_model"],
-                messages=messages,
-                format=SQLGen.model_json_schema()
-            )
-            cls.outputs.append(SQLGen.model_validate_json(resp.message.content))
+            sql_gen = service.generate_sql(user_prompt)
+            cls.outputs.append(sql_gen)
             
         print("done example prompts")
     
