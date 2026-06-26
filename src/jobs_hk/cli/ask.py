@@ -25,7 +25,7 @@ def run():
     ]
     
     resp = client.chat(
-        model=context.project_config["ollama"]["model"],
+        model=context.project_config["ollama"]["code_model"],
         messages=messages,
         format=SQLGen.model_json_schema()
     )

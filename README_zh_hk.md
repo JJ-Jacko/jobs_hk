@@ -20,7 +20,8 @@ source .venv/bin/activate
 ```toml
 [ollama]
 host = "192.168.6.101"
-model = "qwen2.5-coder:7b"
+chat_model = "llama3.2:3b"
+code_model = "qwen2.5-coder:7b"
 ```
 
 ### 執行
