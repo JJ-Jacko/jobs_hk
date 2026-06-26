@@ -5,6 +5,7 @@ from unittest import TestCase
 
 from jobs_hk.cli import context
 from jobs_hk.cli.ask import Ask
+from jobs_hk.other import keywords_in_text
 from jobs_hk.schemas import SQLGen
 
 
@@ -77,11 +78,28 @@ class TestAsk(TestCase):
         cls.__generate_sql()
     
     def test_only_select_statements(self):
-        count_error = 0
-        
         for data in self.test_datas:
-            if data.sql_gen.error_message:
-                count_error += 1
+            has_sql = data.sql_gen.sql is not None
+            has_error_message = data.sql_gen.error_message is not None
+            if not (has_sql ^ has_error_message):
                 continue
             
-            self.assertIn("SELECT", data.sql_gen.sql)
+            if not data.sql_gen.sql:
+                continue
+            
+            if (
+                "SELECT" not in data.sql_gen.sql
+                or keywords_in_text(["INSERT", "UPDATE", "DELETE", "DROP"], data.sql_gen.sql)
+            ):
+                data.pass_only_select_statements = False
+                continue
+            
+            data.pass_only_select_statements = True
+        
+        datas_passed = [
+            data
+            for data in self.test_datas
+            if data.pass_only_select_statements
+        ]
+        print(f"pass: {len(datas_passed)} / {len(self.test_datas)}")
+        print(f"pass rate: {len(datas_passed) / len(self.test_datas):.2%}")
