@@ -1,4 +1,6 @@
+from dataclasses import dataclass
 from typing import List
+from typing import Optional
 from unittest import TestCase
 
 from jobs_hk.cli import context
@@ -6,7 +8,7 @@ from jobs_hk.cli.ask import Ask
 from jobs_hk.schemas import SQLGen
 
 
-user_prompts = [
+prompts = [
     # 基础查询
     "I want to know all the job names and min salary",
     "List all distinct salary types",
@@ -40,29 +42,46 @@ user_prompts = [
 ]
 
 
+@dataclass
+class TestData:
+    prompt: str
+    sql_gen: Optional[SQLGen] = None
+    pass_only_select_statements: Optional[bool] = None
+
+
 class TestAsk(TestCase):
-    outputs: List[SQLGen] = []
+    test_datas: List[TestData] = []
     
     @classmethod
-    def setUpClass(cls):
-        print("running LLM outputs of example prompts...")
+    def __load_test_datas(cls):
+        for user_prompt in prompts:
+            cls.test_datas.append(TestData(user_prompt))
+    
+    @classmethod
+    def __generate_sql(cls):
+        task_name = "LLM generate SQL using user_prompts"
+        print(f"running {task_name}...")
         
         service = Ask(context.project_config["ollama"]["host"])
         
-        for user_prompt in user_prompts:
-            print(f"current prompt: {user_prompt}")
-            sql_gen = service.generate_sql(user_prompt)
-            cls.outputs.append(sql_gen)
+        for data in cls.test_datas:
+            print(f"current prompt: {data.prompt}")
+            sql_gen = service.generate_sql(data.prompt)
+            data.sql_gen = sql_gen
             
-        print("done example prompts")
+        print(f"done {task_name}") 
+    
+    @classmethod
+    def setUpClass(cls):
+        cls.__load_test_datas()
+        cls.__generate_sql()
     
     def test_only_select_statements(self):
         count_error = 0
         
-        for output in self.outputs:
-            if output.error_message:
+        for data in self.test_datas:
+            if data.sql_gen.error_message:
                 count_error += 1
                 continue
             
-            self.assertIsNotNone(output.sql)
-            self.assertIn("SELECT", output.sql)
+            self.assertIn("SELECT", data.sql_gen.sql)
