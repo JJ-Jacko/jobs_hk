@@ -1,4 +1,6 @@
 import functools
+from typing import List
+from typing import Dict
 
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import OperationalError
@@ -138,3 +140,27 @@ class DB:
             )).all()
             
             return jobs
+
+    @db_retry
+    def get_jobs_basic_info(self, limit: int = 10):
+        """Get the Hongkong jobs basic information in the project database"""
+        
+        with Session(self.engine) as s:
+            statement = (
+                select(
+                    Job.name,
+                    Job.salary_type,
+                    Job.salary_min,
+                    Job.salary_max,
+                    Job.address
+                )
+                .limit(limit)
+            )
+            infos = s.exec(statement).all()
+            
+        res: List[Dict[str]] = [
+            info._asdict()
+            for info in infos
+        ]
+            
+        return res
