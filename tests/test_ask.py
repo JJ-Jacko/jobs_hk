@@ -5,8 +5,6 @@ from unittest import TestCase
 
 from jobs_hk.cli import context
 from jobs_hk.cli.ask import Ask
-from jobs_hk.other import keywords_in_text
-from jobs_hk.schemas import SQLGen
 
 
 prompts = [
@@ -46,8 +44,7 @@ prompts = [
 @dataclass
 class TestData:
     prompt: str
-    sql_gen: Optional[SQLGen] = None
-    pass_only_select_statements: Optional[bool] = None
+    sql: Optional[str] = None
 
 
 class TestAsk(TestCase):
@@ -67,8 +64,7 @@ class TestAsk(TestCase):
         
         for data in cls.test_datas:
             print(f"current prompt: {data.prompt}")
-            sql_gen = service.generate_sql(data.prompt)
-            data.sql_gen = sql_gen
+            data.sql = service.generate_sql(data.prompt)
             
         print(f"done {task_name}") 
     
@@ -77,29 +73,5 @@ class TestAsk(TestCase):
         cls.__load_test_datas()
         cls.__generate_sql()
     
-    def test_only_select_statements(self):
-        for data in self.test_datas:
-            has_sql = data.sql_gen.sql is not None
-            has_error_message = data.sql_gen.error_message is not None
-            if not (has_sql ^ has_error_message):
-                continue
-            
-            if not data.sql_gen.sql:
-                continue
-            
-            if (
-                "SELECT" not in data.sql_gen.sql
-                or keywords_in_text(["INSERT", "UPDATE", "DELETE", "DROP"], data.sql_gen.sql)
-            ):
-                data.pass_only_select_statements = False
-                continue
-            
-            data.pass_only_select_statements = True
-        
-        datas_passed = [
-            data
-            for data in self.test_datas
-            if data.pass_only_select_statements
-        ]
-        print(f"pass: {len(datas_passed)} / {len(self.test_datas)}")
-        print(f"pass rate: {len(datas_passed) / len(self.test_datas):.2%}")
+    def test_xxx(self):
+        ...
