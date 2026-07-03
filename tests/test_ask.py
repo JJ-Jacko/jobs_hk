@@ -5,6 +5,7 @@ from unittest import TestCase
 
 from jobs_hk.cli import context
 from jobs_hk.cli.ask import Ask
+from jobs_hk.exceptions import ModelGenerateException
 
 
 prompts = [
@@ -45,6 +46,7 @@ prompts = [
 class TestData:
     prompt: str
     sql: Optional[str] = None
+    model_content: Optional[str] = None
 
 
 class TestAsk(TestCase):
@@ -64,7 +66,10 @@ class TestAsk(TestCase):
         
         for data in cls.test_datas:
             print(f"current prompt: {data.prompt}")
-            data.sql = service.generate_sql(data.prompt)
+            try:
+                data.sql = service.generate_sql(data.prompt)
+            except ModelGenerateException as e:
+                data.model_content = e.model_content
             
         print(f"done {task_name}") 
     

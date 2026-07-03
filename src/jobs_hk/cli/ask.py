@@ -4,6 +4,7 @@ import ollama
 
 from jobs_hk.cli import context
 from jobs_hk.env import get_ddl_text
+from jobs_hk.exceptions import ModelGenerateException
 from jobs_hk.other import keywords_in_text
 from jobs_hk.schemas import SQLGen
 
@@ -98,39 +99,59 @@ class Ask:
             )
             
             sql_gen = SQLGen.model_validate_json(resp.message.content)
+            messages.append(resp.message)
             
-            # Check attributions `sql` `error_message` exist only one
-            has_sql = sql_gen.sql is not None
-            has_error_message = sql_gen.error_message is not None
-            if not (has_sql ^ has_error_message):
-                messages.append(resp.message)
+            # Check status in rule
+            if sql_gen.status not in ["REJECT", "RESPOND_FAIL", "RESPOND_SUCCESS"]:
                 messages.append({
                     "role": "user",
-                    "content": (
-                        "Schema violation: You must provide EITHER 'sql' OR 'error_message'."
-                        "Do not provide both, and do not leave both empty."
-                    )
+                    "content": "Schema violation: `status` MUST fill with REJECT, RESPOND_FAIL and RESPOND_SUCCESS"
                 })
                 continue
             
-            # Check attributions `sql` exist
-            if not sql_gen.sql:
-                messages.append(resp.message)
-                messages.append({
-                    "role": "user",
-                    "content": (
-                        f"You provided an error instead of SQL: '{sql_gen.error_message}'."
-                        "Please try your best to resolve this and generate a valid SQLite query anyway."
+            if sql_gen.status == "REJECT":
+                if sql_gen.sql is not None and sql_gen.error_message is not None:
+                    messages.append({
+                        "role": "user",
+                        "content": (
+                            "Schema violation: If `status` is REJECT, "
+                            "fill `sql`, `error_message` both with null."
+                        )
+                    })
+                    continue
+                
+                raise ModelGenerateException(
+                    type="REJECT",
+                    model_content=resp.message.content,
+                    message=(
+                        "The request is invalid, malicious, non-query or irrelevant conversational text "
+                        "or tries to INSERT/UPDATE/DELETE/DROP these illegal modification."
                     )
-                })
-                continue
+                )
+            
+            if sql_gen.status == "RESPOND_FAIL":
+                if sql_gen.sql is not None or sql_gen.error_message is None:
+                    messages.append({
+                        "role": "user",
+                        "content": (
+                            "Schema violation: If `status` is RESPOND_FAIL, "
+                            "fill `sql` with null, "
+                            "fill `error_message` with the spcific reason."
+                        )
+                    })
+                    continue
+                
+                raise ModelGenerateException(
+                    type="RESPOND_FAIL",
+                    model_content=resp.message.content,
+                    message="The request is a query intent but cannot be fulfilled due to missing data/tables."
+                )
             
             # Check sql statement security
             if (
                 "SELECT" not in sql_gen.sql
                 or keywords_in_text(["INSERT", "UPDATE", "DELETE", "DROP"], sql_gen.sql)
             ):
-                messages.append(resp.message)
                 messages.append({
                     "role": "user",
                     "content": (
