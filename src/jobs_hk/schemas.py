@@ -17,14 +17,14 @@ class SQLGen(BaseModel):
     sql: Optional[str] = Field(
         None,
         description=(
-            "The generated SQLite SELECT statement.",
+            "The generated SQLite SELECT statement. "
             "MUST be null if status is REJECT or RESPOND_FAIL."
         )
     )
     error_message: Optional[str] = Field(
         None,
         description=(
-            "The detailed error reason.",
+            "The detailed error reason. "
             "MUST be null if status is REJECT or RESPOND_SUCCESS."
         )
     )

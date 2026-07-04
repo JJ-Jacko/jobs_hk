@@ -155,7 +155,7 @@ class Ask:
                 messages.append({
                     "role": "user",
                     "content": (
-                        "Security/Policy violation: The generated SQL must be a Read-Only 'SELECT' query."
+                        "Security/Policy violation: The generated SQL must be a Read-Only 'SELECT' query. "
                         "Do NOT use destructive or modification keywords (INSERT, UPDATE, DELETE, DROP)."
                     )
                 })
