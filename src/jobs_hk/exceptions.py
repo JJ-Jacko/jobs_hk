@@ -18,3 +18,22 @@ class ModelGenerateException(Exception):
     
     def __str__(self):
         return self.message
+
+
+class SQLStatementExecException(Exception):
+    statement: str
+    reason: str
+    
+    def __init__(
+            self,
+            statement: str,
+            reason: str
+    ):
+        self.statement = statement
+        self.reason = reason
+
+    def __str__(self):
+        return (
+            f"statement: `{self.statement}` is illegal.\n"
+            f"reason: {self.reason}."
+        )

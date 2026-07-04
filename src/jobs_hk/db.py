@@ -2,6 +2,7 @@ import functools
 from typing import List
 from typing import Dict
 
+import sqlalchemy
 from sqlalchemy.engine import Engine
 from sqlalchemy.exc import OperationalError
 from sqlmodel import select
@@ -10,6 +11,7 @@ from sqlmodel import Session
 from jobs_hk.datas import Company
 from jobs_hk.datas import Contact
 from jobs_hk.datas import Job
+from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.other import get_fields_setted
 from jobs_hk.waiting import Waiting
 from jobs_hk.types import UNSET
@@ -164,3 +166,26 @@ class DB:
         ]
             
         return res
+    
+    @db_retry
+    def get_jobs_specific_info(self, statement: str):
+        """
+        Get the Hongkong jobs specific infomation
+        using an LLM-generated SQL statement in the project database
+        """
+        
+        with Session(self.engine) as s:
+            conn = s.connection()
+            text_clause = sqlalchemy.text(statement)
+            try:
+                conn.execute(sqlalchemy.text(f"EXPLAIN {statement}"))
+            except OperationalError as e:
+                raise SQLStatementExecException(statement, str(e.orig))
+            
+            res = conn.execute(text_clause)
+            
+            if not res.returns_rows:
+                raise SQLStatementExecException(statement, "statement did not return rows")
+            
+            rows = res.mappings().all()
+            return rows
