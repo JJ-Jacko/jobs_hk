@@ -22,6 +22,12 @@ You must classify the request into one of the following statuses:
 
 ## Data Constraints
 - `jobs.salary_type` only contain: "時薪", "日薪", 月薪"
+- `jobs.job_remark` Free-text job duties / skills description, mostly in traditional Chinese,
+    but technical / professional roles often in English (e.g. "IT support", "audits").
+    If a query asks about a skill, tool, or programming language (e.g. Excel, Word, Python, Java),
+    use `LIKE %keyword%` on this field.
+- `jobs.edu_remark` Free-text description, mostly in traditional Chinese,
+    mixing education level, years of experience, language proficiency, certificates.
 
 ## Strict Constraints:
 - CRITICAL: Only SELECT statements are allowed.
