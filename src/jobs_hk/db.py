@@ -3,8 +3,6 @@ from typing import List
 from typing import Dict
 
 import sqlalchemy
-from sqlalchemy.engine import Engine
-from sqlalchemy.exc import OperationalError
 from sqlmodel import select
 from sqlmodel import Session
 
@@ -35,7 +33,7 @@ def db_retry(func):
                 raise Exception("Database connection failed after multiple retries")
             try:
                 result = func(*args, **kwargs)
-            except OperationalError:
+            except sqlalchemy.OperationalError:
                 count_retry += 1
                 Waiting.normal(10, "Reconnect in [n]s")
                 continue
@@ -45,9 +43,9 @@ def db_retry(func):
 
 
 class DB:
-    engine: Engine
+    engine: sqlalchemy.Engine
     
-    def __init__(self, engine: Engine):
+    def __init__(self, engine: sqlalchemy.Engine):
         self.engine = engine
     
     @db_retry
@@ -179,7 +177,7 @@ class DB:
             text_clause = sqlalchemy.text(statement)
             try:
                 conn.execute(sqlalchemy.text(f"EXPLAIN {statement}"))
-            except OperationalError as e:
+            except sqlalchemy.OperationalError as e:
                 raise SQLStatementExecException(statement, str(e.orig))
             
             res = conn.execute(text_clause)
