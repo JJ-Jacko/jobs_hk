@@ -5,6 +5,7 @@ import ollama
 from jobs_hk.cli import context
 from jobs_hk.env import get_ddl_text
 from jobs_hk.exceptions import ModelGenerateException
+from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.other import keywords_in_text
 from jobs_hk.schemas import SQLGen
 
@@ -17,7 +18,7 @@ class Ask:
         self.client = ollama.Client(host)
         self.tools = {
             "get_jobs_basic_info": context.db.get_jobs_basic_info,
-            "generate_sql": self.generate_sql
+            "query_jobs_database": self.query_jobs_database
         }
 
     def chat(self, user_prompt: str):
@@ -40,7 +41,7 @@ class Ask:
             think=False,
             tools=[
                 context.db.get_jobs_basic_info,
-                self.generate_sql
+                self.query_jobs_database
             ]
         )
         
@@ -163,6 +164,48 @@ class Ask:
             
             return sql_gen.sql
 
+    def query_jobs_database(self, user_prompt: str):
+        """
+        Query the database using a natural language descripion.
+        
+        Convert the request into a SQL SELECT statement and executes it,
+        returning matching records or an error description
+        if the query cound not be fulfilled.
+
+        Args:
+            user_prompt:
+                A direct and explicit description of the data query NOT the SQL statement.
+                (e.g., "Find jobs with salary upper than 5000"). 
+                - CRITICAL: Do NOT use vague or conversational phrasing, or the model will fail.
+        """
+        
+        try:
+            statement = self.generate_sql(user_prompt)
+        except ModelGenerateException as e:
+            return (
+                "Query execution FAILED.\n"
+                f"Reason: {str(e)}\n"
+                "Attention: Do NOT expose raw SQL or technical error datails to the user, "
+                "instead, explain in natural language that the request could not be fulfilled "
+                "and suggest the user or simplify their query."
+            )
+        
+        try:
+            info = context.db.get_jobs_specific_info(statement)
+        except SQLStatementExecException as e:
+            return (
+                "Query execution FAILED.\n"
+                f"Reason: {str(e)}\n"
+                "Attention: Do NOT expose raw SQL or technical error datails to the user, "
+                "instead, explain in natural language that the request could not be fulfilled "
+                "and suggest the user or simplify their query."
+            )
+        else:
+            return (
+                "Query execution SUCCESSED.\n"
+                f"Result: {str(info)}"
+            )
+        
 
 def run():
     service = Ask(context.project_config["ollama"]["host"])
