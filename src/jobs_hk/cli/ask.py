@@ -1,4 +1,4 @@
-from jobs_hk.cli import context
+import jobs_hk.context as context
 from jobs_hk.services.assistant import Assistant
 
     

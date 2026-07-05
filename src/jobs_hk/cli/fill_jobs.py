@@ -1,4 +1,4 @@
-import jobs_hk.cli.context as context
+import jobs_hk.context as context
 from jobs_hk.filters.job_card_filter import JobCardFilter
 from jobs_hk.log import get_logger
 from jobs_hk.queue_manager import Queue

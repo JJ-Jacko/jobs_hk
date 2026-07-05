@@ -3,7 +3,7 @@ from typing import List
 from typing import Optional
 from unittest import TestCase
 
-from jobs_hk.cli import context
+import jobs_hk.context as context
 from jobs_hk.cli.ask import Ask
 from jobs_hk.exceptions import ModelGenerateException
 

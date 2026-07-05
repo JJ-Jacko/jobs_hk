@@ -1,6 +1,6 @@
 import itertools
 
-import jobs_hk.cli.context as context
+import jobs_hk.context as context
 from jobs_hk.filters.job_search_filter import JobSearchFilter
 from jobs_hk.log import get_logger
 from jobs_hk.waiting import Waiting

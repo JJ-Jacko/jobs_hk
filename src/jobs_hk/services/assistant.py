@@ -2,7 +2,7 @@ from typing import Dict
 
 import ollama
 
-from jobs_hk.cli import context
+import jobs_hk.context as context
 from jobs_hk.env import get_ddl_text
 from jobs_hk.exceptions import ModelGenerateException
 from jobs_hk.exceptions import SQLStatementExecException
