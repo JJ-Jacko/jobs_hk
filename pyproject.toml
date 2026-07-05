@@ -11,6 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
+run-ask = "jobs_hk.cli.ask:run"
 run-search-job = "jobs_hk.cli.search_jobs:run"
 run-fill-job = "jobs_hk.cli.fill_jobs:run"
 

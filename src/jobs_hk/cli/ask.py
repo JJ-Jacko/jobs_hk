@@ -209,6 +209,9 @@ class Ask:
 
 def run():
     service = Ask(context.project_config["ollama"]["host"])
-    user_prompt = input(">>> ")
-    content = service.chat(user_prompt)
     
+    while True:
+        user_prompt = input(">>> ")
+        content = service.chat(user_prompt)
+        print(content)
+        print('=' * 60)
