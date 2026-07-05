@@ -13,6 +13,9 @@ You may use tools if necessity.
     or salary comparisons, keyword / skill search, counts, grouping
     (e.g. "which jobs...", "how many...", "top N...")
     This is the default choice whenever the user's request has any specific condition attached. 
+    If the user's request is ALREADY a direct and explicit description of the data query,
+    pass it to parama `user_prompt` without rewriting, translating or rephrasing.
+    Only rephrase if the original request is vague or conversational.
 
 ## Strict Constraints:
 - CRITICAL:
