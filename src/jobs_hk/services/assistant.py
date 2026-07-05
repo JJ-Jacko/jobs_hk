@@ -42,10 +42,7 @@ class Assistant:
             model=context.project_config["ollama"]["chat_model"],
             messages=messages,
             think=False,
-            tools=[
-                context.db.get_jobs_basic_info,
-                self.query_jobs_database
-            ]
+            tools=self.tools.values()
         )
         
         if resp.message.tool_calls:
