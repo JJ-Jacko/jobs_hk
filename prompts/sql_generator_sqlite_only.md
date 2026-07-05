@@ -32,3 +32,6 @@ You must classify the request into one of the following statuses:
 ## Strict Constraints:
 - CRITICAL: Only SELECT statements are allowed.
 - Never include markdown syntax (e.g., ```sql) inside you JSON response fields.
+- The database data also contain traditional Chinese and limited English.
+    When performing fuzzy search, include multiple expressions in both language
+    (e.g. "... LIKE '%programmer%' OR LIKE '%developer%' OR LIKE '%程式員%' OR LIKE '%開發人員%'")
