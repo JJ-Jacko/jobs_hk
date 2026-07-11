@@ -1,11 +1,17 @@
 import functools
 import itertools
+import socket
 import time
 
 import requests
 
+from jobs_hk.exceptions import ProxyServerDisconnection
 
-__all__ = ["JobGovHK"]
+
+__all__ = [
+    "proxy_server_active",
+    "JobGovHK"
+]
 
 
 def web_retry(func):
@@ -41,6 +47,22 @@ def web_retry(func):
     return wrapper
 
 
+def proxy_server_active(
+        host: str,
+        port: int,
+        timeout: float = 3.0
+):
+    """Check the proxy server active."""
+
+    try:
+        with socket.create_connection((host, port), timeout=timeout):
+            return True
+    except (socket.timeout, ConnectionRefusedError, OSError):
+        return False
+    
+    return False
+
+
 class JobGovHK:
     s: requests.Session
     
@@ -49,11 +71,21 @@ class JobGovHK:
             proxy_host: str = None,
             proxy_port: int = None
     ):
+        """
+        Raises:
+            ProxyServerDisconnection:
+                Raise it if the proxy server is disconnection
+                when arguments `proxy_host` & `proxy_port` both active.
+        """
+        
         self.s = requests.session()
         
         self.s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
         
         if all((proxy_host, proxy_port)):
+            if not proxy_server_active(proxy_host, proxy_port):
+                raise ProxyServerDisconnection(proxy_host, proxy_port)
+            
             proxy_url = f"http://{proxy_host}:{proxy_port}"        
             self.s.proxies = {
                 "http": proxy_url,
