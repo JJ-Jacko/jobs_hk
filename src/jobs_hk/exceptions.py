@@ -1,6 +1,3 @@
-from typing import Literal
-
-
 class ModelGenerateException(Exception):
     type: str
     model_content: str
@@ -37,3 +34,19 @@ class SQLStatementExecException(Exception):
             f"statement: `{self.statement}` is illegal.\n"
             f"reason: {self.reason}."
         )
+
+
+class ProxyServerDisconnection(Exception):
+    host: str
+    port: int
+    
+    def __init__(
+            self,
+            host: str,
+            port: str
+    ):
+        self.host = host
+        self.port = port
+
+    def __str__(self):
+        return f"Server: `{self.host}:{self.port}` is disconnection."
