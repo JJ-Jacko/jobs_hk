@@ -15,10 +15,17 @@ __all__ = [
 
 
 def web_retry(func):
-    """Decorator for retrying web operations in case of disconnection 修饰 Web 请求的函数断联后尝试重连
+    """
+    Decorator for retrying web operations in case of disconnection.
+    修饰 Web 请求的函数断联后尝试重连
 
     Raises:
-        Exception: Raised when multiple retry attempts fail 多次尝试重连都无法连上
+        Exception:
+            Raised when multiple retry attempts fail.
+            多次尝试重连都无法连上
+        requests.exceptions.ProxyError:
+            The proxy server can not used.
+            代理服务器没法使用
     """
     
     @functools.wraps(func)
@@ -29,6 +36,8 @@ def web_retry(func):
             
             try:
                 resp: requests.Response = func(*args, **kwargs)
+            except requests.exceptions.ProxyError:
+                raise
             except (
                 requests.exceptions.ConnectionError,
                 requests.exceptions.ReadTimeout
