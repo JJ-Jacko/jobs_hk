@@ -58,10 +58,10 @@ def run():
     logger = get_logger("fill_multi_threads")
     lock = threading.Lock()
     queue = QueueMT(
-        (
+        [
             Task(job)
             for job in context.db.get_jobs_without_detailed()
-        ),
+        ],
         lock
     )
     

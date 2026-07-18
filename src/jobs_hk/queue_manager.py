@@ -2,9 +2,8 @@ import functools
 import threading
 from datetime import datetime as DateTime
 from typing import Dict
-from typing import Iterable
+from typing import List
 from typing import Literal
-from typing import Tuple
 
 from jobs_hk.datas import Job
 
@@ -53,7 +52,7 @@ class Queue:
     
     def __init__(
             self,
-            tasks: Iterable[Task]
+            tasks: List[Task]
     ):
         self.tasks = {}
         for task in tasks:
@@ -118,7 +117,7 @@ class QueueMT(Queue):
     
     def __init__(
             self,
-            tasks: Iterable[Task],
+            tasks: List[Task],
             lock: threading.Lock
     ):
         super().__init__(tasks)

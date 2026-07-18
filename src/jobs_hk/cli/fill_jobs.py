@@ -11,10 +11,10 @@ def run():
     logger = get_logger("fill")
     waiting = Waiting()
     web = JobGovHK()
-    queue = Queue(
+    queue = Queue([
         Task(job)
         for job in context.db.get_jobs_without_detailed()
-    )
+    ])
     
     while (task_key := queue.get_pendding_task_key()):
         job = queue.get_task(task_key).job
