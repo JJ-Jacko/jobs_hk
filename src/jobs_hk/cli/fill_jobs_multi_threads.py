@@ -10,16 +10,16 @@ from jobs_hk.waiting import Waiting
 from jobs_hk.web import JobGovHK
 
 
-thread_num: int = 3
-
-
 def worker(
         logger: Logger,
-        proxy_num: int,
+        offset: int,
         queue: QueueMT
 ):
     waiting = Waiting()
-    web = JobGovHK("127.0.0.1", 10800 + proxy_num)
+    web = JobGovHK(
+        context.project_config["proxy"]["host"],
+        context.project_config["proxy"]["port_start"] + offset
+    )
     
     while (task_key := queue.get_pendding_task_key()):
         job = queue.get_task(task_key).job
@@ -69,12 +69,12 @@ def run():
             target=worker,
             kwargs={
                 "logger": logger,
-                "proxy_num": i,
+                "offset": i,
                 "queue": queue
             },
-            name=f"Worker-{i}"
+            name=f"Worker-{i + 1}"
         )
-        for i in range(1, thread_num + 1)
+        for i in range(context.project_config["proxy"]["offset"])
     ]
     for t in threads:
         t.start()
