@@ -1,4 +1,5 @@
 import threading
+import time
 from logging import Logger
 
 import jobs_hk.context as context
@@ -78,6 +79,7 @@ def run():
     ]
     for t in threads:
         t.start()
+        time.sleep(3)
     for t in threads:
         t.join()
         
