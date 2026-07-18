@@ -6,7 +6,7 @@ def run():
     service = Assistant(context.project_config["ollama"]["host"])
     
     while True:
-        user_prompt = "I want to find a job about sale"
+        user_prompt = input(">>> ")
         content = service.chat(user_prompt)
         print(content)
         print('=' * 60)
