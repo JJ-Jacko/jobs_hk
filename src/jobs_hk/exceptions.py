@@ -50,3 +50,7 @@ class ProxyServerDisconnection(Exception):
 
     def __str__(self):
         return f"Server: `{self.host}:{self.port}` is disconnection."
+
+
+class WebRetryExansted(Exception):
+    ...

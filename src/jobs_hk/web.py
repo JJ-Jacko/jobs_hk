@@ -6,6 +6,7 @@ import time
 import requests
 
 from jobs_hk.exceptions import ProxyServerDisconnection
+from jobs_hk.exceptions import WebRetryExansted
 
 
 __all__ = [
@@ -20,33 +21,24 @@ def web_retry(func):
     修饰 Web 请求的函数断联后尝试重连
 
     Raises:
-        Exception:
+        WebRetryExansted:
             Raised when multiple retry attempts fail.
             多次尝试重连都无法连上
-        requests.exceptions.ProxyError:
-            The proxy server can not used.
-            代理服务器没法使用
     """
     
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         for attempt in itertools.count(0):
-            if attempt > 10:
-                raise Exception("Web connection failed after multiple retries")
+            if attempt > 3:
+                raise WebRetryExansted("Web connection failed after multiple retries")
             
             try:
                 resp: requests.Response = func(*args, **kwargs)
-            except requests.exceptions.ProxyError:
-                raise
             except (
                 requests.exceptions.ConnectionError,
                 requests.exceptions.ReadTimeout
             ):
-                time.sleep(10)
-                continue
-            
-            if resp.status_code in (504, ):
-                time.sleep(10)
+                time.sleep(3)
                 continue
             
             break
