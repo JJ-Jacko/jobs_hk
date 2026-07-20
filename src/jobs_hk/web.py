@@ -67,10 +67,14 @@ def proxy_server_active(
 class JobGovHK:
     s: requests.Session
     
-    def __init__(
+    def __init__(self):
+        self.s = requests.session()
+        self.s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+    
+    def set_proxy(
             self,
-            proxy_host: str = None,
-            proxy_port: int = None
+            proxy_host: str,
+            proxy_port: int
     ):
         """
         Raises:
@@ -79,19 +83,14 @@ class JobGovHK:
                 when arguments `proxy_host` & `proxy_port` both active.
         """
         
-        self.s = requests.session()
+        if not proxy_server_active(proxy_host, proxy_port):
+            raise ProxyServerDisconnection(proxy_host, proxy_port)
         
-        self.s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
-        
-        if all((proxy_host, proxy_port)):
-            if not proxy_server_active(proxy_host, proxy_port):
-                raise ProxyServerDisconnection(proxy_host, proxy_port)
-            
-            proxy_url = f"http://{proxy_host}:{proxy_port}"        
-            self.s.proxies = {
-                "http": proxy_url,
-                "https": proxy_url,
-            }
+        proxy_url = f"http://{proxy_host}:{proxy_port}"        
+        self.s.proxies = {
+            "http": proxy_url,
+            "https": proxy_url,
+        }
     
     @web_retry
     def job_search(self, page: int = 1):

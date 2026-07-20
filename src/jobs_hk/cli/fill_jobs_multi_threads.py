@@ -17,7 +17,8 @@ def worker(
         queue: QueueMT
 ):
     waiting = Waiting()
-    web = JobGovHK(
+    web = JobGovHK()
+    web.set_proxy(
         context.project_config["proxy"]["host"],
         context.project_config["proxy"]["port_start"] + offset
     )
