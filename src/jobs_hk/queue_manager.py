@@ -92,7 +92,7 @@ class Queue:
 
     def set_task_status(
             self,
-            status: Literal["Running", "Completed", "Failed"],
+            status: Literal["Pendding", "Running", "Completed", "Failed"],
             task_key: str
     ):
         task = self.get_task(task_key)
