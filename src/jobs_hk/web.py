@@ -73,20 +73,19 @@ class JobGovHK:
     
     def set_proxy(
             self,
-            proxy_host: str,
-            proxy_port: int
+            host: str,
+            port: int
     ):
         """
         Raises:
             ProxyServerDisconnection:
-                Raise it if the proxy server is disconnection
-                when arguments `proxy_host` & `proxy_port` both active.
+                Raise it if the proxy server is disconnect.
         """
         
-        if not proxy_server_active(proxy_host, proxy_port):
-            raise ProxyServerDisconnection(proxy_host, proxy_port)
+        if not proxy_server_active(host, port):
+            raise ProxyServerDisconnection(host, port)
         
-        proxy_url = f"http://{proxy_host}:{proxy_port}"        
+        proxy_url = f"http://{host}:{port}"        
         self.s.proxies = {
             "http": proxy_url,
             "https": proxy_url,
