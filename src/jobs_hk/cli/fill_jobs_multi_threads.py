@@ -3,8 +3,10 @@ import time
 from logging import Logger
 
 import jobs_hk.context as context
+from jobs_hk.exceptions import WebRetryExansted
 from jobs_hk.filters.job_card_filter import JobCardFilter
 from jobs_hk.log import get_logger
+from jobs_hk.proxy_manager import ProxyPool
 from jobs_hk.queue_manager import QueueMT
 from jobs_hk.queue_manager import Task
 from jobs_hk.waiting import Waiting
@@ -13,21 +15,27 @@ from jobs_hk.web import JobGovHK
 
 def worker(
         logger: Logger,
-        offset: int,
-        queue: QueueMT
+        queue: QueueMT,
+        proxy_pool: ProxyPool
 ):
+    current_thread_name = threading.current_thread().name
+
     waiting = Waiting()
     web = JobGovHK()
-    web.set_proxy(
-        context.project_config["proxy"]["host"],
-        context.project_config["proxy"]["port_start"] + offset
-    )
+    web.set_proxy(**proxy_pool.get_proxy(current_thread_name))
     
     while (task_key := queue.get_pendding_task_key()):
         job = queue.get_task(task_key).job
         logger.info(f"Processing job: {job.name}")
         
-        resp = web.job_card(job.order)
+        try:
+            resp = web.job_card(job.order)
+        except WebRetryExansted:
+            queue.set_task_status("Pendding", task_key)
+            proxy_pool.clear_proxy(current_thread_name)
+            web.set_proxy(**proxy_pool.get_proxy(current_thread_name))
+            waiting.random(show_info=False)
+        
         filter = JobCardFilter(resp.text)
         job_info = filter.get_job_info()
 
@@ -58,6 +66,7 @@ def worker(
 def run():
     logger = get_logger("fill_multi_threads", multi_thread=True)
     lock = threading.Lock()
+    
     queue = QueueMT(
         [
             Task(job)
@@ -66,18 +75,26 @@ def run():
         lock
     )
     
+    proxy_pool = ProxyPool(
+        host=context.project_config["proxy"]["host"],
+        port_start=context.project_config["proxy"]["port_start"],
+        offset=context.project_config["proxy"]["offset"],
+        lock=lock
+    )
+    
     threads = [
         threading.Thread(
             target=worker,
             kwargs={
                 "logger": logger,
-                "offset": i,
-                "queue": queue
+                "queue": queue,
+                "proxy_pool": proxy_pool,
             },
             name=f"Worker-{i + 1}"
         )
         for i in range(context.project_config["proxy"]["offset"])
     ]
+    
     for t in threads:
         t.start()
         time.sleep(3)
