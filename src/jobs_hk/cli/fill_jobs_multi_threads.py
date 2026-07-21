@@ -56,7 +56,7 @@ def worker(
 
 
 def run():
-    logger = get_logger("fill_multi_threads")
+    logger = get_logger("fill_multi_threads", multi_thread=True)
     lock = threading.Lock()
     queue = QueueMT(
         [
