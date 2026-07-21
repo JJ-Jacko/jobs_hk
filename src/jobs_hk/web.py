@@ -5,7 +5,6 @@ import time
 
 import requests
 
-from jobs_hk.exceptions import ProxyServerDisconnection
 from jobs_hk.exceptions import WebRetryExansted
 
 
@@ -75,15 +74,7 @@ class JobGovHK:
             self,
             host: str,
             port: int
-    ):
-        """
-        Raises:
-            ProxyServerDisconnection:
-                Raise it if the proxy server is disconnect.
-        """
-        
-        if not proxy_server_active(host, port):
-            raise ProxyServerDisconnection(host, port)
+    ):        
         
         proxy_url = f"http://{host}:{port}"        
         self.s.proxies = {
