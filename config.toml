@@ -7,3 +7,4 @@ code_model = "qwen2.5-coder:7b"
 host = "192.168.6.101"
 port_start = 10801
 offset = 5
+rate = 0.75

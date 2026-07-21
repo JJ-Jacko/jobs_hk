@@ -35,6 +35,7 @@ def worker(
             proxy_pool.clear_proxy(current_thread_name)
             web.set_proxy(**proxy_pool.get_proxy(current_thread_name))
             waiting.random(show_info=False)
+            continue
         
         filter = JobCardFilter(resp.text)
         job_info = filter.get_job_info()
@@ -82,6 +83,7 @@ def run():
         lock=lock
     )
     
+    num_thread = int(context.project_config["proxy"]["offset"] * context.project_config["proxy"]["rate"])
     threads = [
         threading.Thread(
             target=worker,
@@ -92,7 +94,7 @@ def run():
             },
             name=f"Worker-{i + 1}"
         )
-        for i in range(context.project_config["proxy"]["offset"])
+        for i in range(num_thread)
     ]
     
     for t in threads:
