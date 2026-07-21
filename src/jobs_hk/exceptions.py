@@ -54,3 +54,7 @@ class ProxyServerDisconnection(Exception):
 
 class WebRetryExansted(Exception):
     ...
+
+
+class NeedWaiting(Exception):
+    ...

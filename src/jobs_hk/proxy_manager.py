@@ -3,6 +3,7 @@ import threading
 from dataclasses import dataclass
 from typing import List
 
+from jobs_hk.exceptions import NeedWaiting
 from jobs_hk.web import proxy_server_active
 
 
@@ -60,20 +61,31 @@ class ProxyPool:
 
     @thread_lock
     def get_proxy(self, user: str):
-        """Get proxy `host` & `port` in a dict"""
+        """
+        Get proxy `host` & `port` in a dict
+
+        Raises:
+            ValueError: The user has used proxy in pool.
+            NeedWaiting: When there is no node in proxy pool happen.
+        """
         
-        for node in self.nodes:
-            if node.user == user:
+        nodes_available: List[Node] = []
+        for n in self.nodes:
+            if n.user == user:
                 raise ValueError(f"The user, {user}, has used proxy in pool.")
             
-            if node.user is None:
-                node.user = user
-                return {
-                    "host": node.host,
-                    "port": node.port
-                }
+            if n.user is None:
+                nodes_available.append(n)
         
-        raise Exception("Need queue")
+        if not nodes_available:
+            raise NeedWaiting
+             
+        node = min(nodes_available, key=lambda n: n.jamming_level)
+        node.user = user
+        return {
+            "host": node.host,
+            "port": node.port
+        }
     
     @thread_lock
     def clear_proxy(self, user: str):

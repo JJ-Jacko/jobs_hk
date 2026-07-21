@@ -3,6 +3,7 @@ import time
 from logging import Logger
 
 import jobs_hk.context as context
+from jobs_hk.exceptions import NeedWaiting
 from jobs_hk.exceptions import WebRetryExansted
 from jobs_hk.filters.job_card_filter import JobCardFilter
 from jobs_hk.log import get_logger
@@ -33,7 +34,16 @@ def worker(
         except WebRetryExansted:
             queue.set_task_status("Pendding", task_key)
             proxy_pool.clear_proxy(current_thread_name)
-            web.set_proxy(**proxy_pool.get_proxy(current_thread_name))
+
+            while True:
+                try:
+                    web.set_proxy(**proxy_pool.get_proxy(current_thread_name))
+                except NeedWaiting:
+                    waiting.random(show_info=False)
+                    continue
+                else:
+                    break
+            
             waiting.random(show_info=False)
             continue
         
