@@ -47,12 +47,35 @@ class Task:
         return f"Task(status={self.status}, job_name={self.job.name})"
 
 
+class TaskS:
+    page: int
+    status: Literal["Pendding", "Running", "Completed", "Failed"]
+    date_time: DateTime
+
+    def __init__(self, page: int):
+        self.page = page
+        self.status = "Pendding"
+        self.date_time = None
+
+    def __eq__(self, other):
+        if not isinstance(other, TaskS):
+            return NotImplemented
+        
+        return self.page == other.page
+    
+    def __hash__(self):
+        return hash((self.page, "salt"))
+    
+    def __repr__(self):
+        return f"Task(status={self.status}, page={self.page})"
+
+
 class Queue:
-    tasks: Dict[str, Task]
+    tasks: Dict[str, Task] | Dict[str, TaskS]
     
     def __init__(
             self,
-            tasks: List[Task]
+            tasks: List[Task] | List[TaskS]
     ):
         self.tasks = {}
         for task in tasks:
@@ -117,7 +140,7 @@ class QueueMT(Queue):
     
     def __init__(
             self,
-            tasks: List[Task],
+            tasks: List[Task] | List[TaskS],
             lock: threading.Lock
     ):
         super().__init__(tasks)
