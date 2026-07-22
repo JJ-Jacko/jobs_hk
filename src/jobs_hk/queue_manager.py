@@ -11,8 +11,8 @@ from jobs_hk.datas import Job
 
 
 __all__ = [
-    "Task",
-    "TaskS",
+    "TaskFill",
+    "TaskSearch",
     "Queue",
     "QueueMT"
 ]
@@ -63,7 +63,7 @@ class TaskBase(ABC):
         ...
 
 
-class Task(TaskBase):
+class TaskFill(TaskBase):
     job: Job
 
     def __init__(self, job: Job):
@@ -71,7 +71,7 @@ class Task(TaskBase):
         self.job = job
 
     def _eq_impl(self, other):
-        if not isinstance(other, Task):
+        if not isinstance(other, TaskFill):
             return NotImplemented
         
         return self.job == other.job
@@ -85,7 +85,7 @@ class Task(TaskBase):
         }
     
 
-class TaskS(TaskBase):
+class TaskSearch(TaskBase):
     page: int
 
     def __init__(self, page: int):
@@ -93,7 +93,7 @@ class TaskS(TaskBase):
         self.page = page
     
     def _eq_impl(self, other):
-        if not isinstance(other, TaskS):
+        if not isinstance(other, TaskSearch):
             return NotImplemented
         
         return self.page == other.page

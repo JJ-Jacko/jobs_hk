@@ -9,7 +9,7 @@ from jobs_hk.filters.job_search_filter import JobSearchFilter
 from jobs_hk.log import get_logger
 from jobs_hk.proxy_manager import ProxyPool
 from jobs_hk.queue_manager import QueueMT
-from jobs_hk.queue_manager import TaskS
+from jobs_hk.queue_manager import TaskSearch
 from jobs_hk.waiting import Waiting
 from jobs_hk.web import JobGovHK
 
@@ -81,7 +81,7 @@ def run():
 
     queue = QueueMT(
         [
-            TaskS(i + 1)
+            TaskSearch(i + 1)
             for i in range(total_pages)
         ],
         lock
