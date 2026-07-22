@@ -1,5 +1,6 @@
 import functools
 import threading
+from collections import Counter
 from dataclasses import dataclass
 from typing import List
 
@@ -58,6 +59,26 @@ class ProxyPool:
                 continue
             
             self.nodes.append(node)
+
+    def __repr__(self):
+        counter_jl = Counter(
+            node.jamming_level
+            for node in self.nodes
+        )
+        
+        total = len(self.nodes)
+        busy = sum([
+            1
+            for node in self.nodes
+            if node.user is not None
+        ])
+        usage_rate = busy / total if total else 0
+        
+        return (
+            f"ProxyPool"
+            f"(Usage: {usage_rate:.2%}, "
+            f"Jamming-0: {counter_jl.get(0, 0)})"
+        )
 
     @thread_lock
     def get_proxy(self, user: str):
