@@ -1,5 +1,7 @@
 import functools
 import threading
+from abc import ABC
+from abc import abstractmethod
 from datetime import datetime as DateTime
 from typing import Dict
 from typing import List
@@ -10,6 +12,7 @@ from jobs_hk.datas import Job
 
 __all__ = [
     "Task",
+    "TaskS",
     "Queue",
     "QueueMT"
 ]
@@ -24,58 +27,92 @@ def thread_lock(func):
     return wrapper
 
 
-class Task:
-    job: Job
+class TaskBase(ABC):
     status: Literal["Pendding", "Running", "Completed", "Failed"]
     date_time: DateTime
 
-    def __init__(self, job: Job):
-        self.job = job
+    def __init__(self):
         self.status = "Pendding"
         self.date_time = None
 
     def __eq__(self, other):
+        return self._eq_impl(other)
+    
+    def __hash__(self):
+        return self._hash_impl()
+    
+    def __repr__(self):
+        infos_str = f"status={self.status}"
+        
+        for info, value in self._repr_extra_infos().items():
+            info_str = f"{info}={value}"
+            infos_str += f", {info_str}"
+        
+        return f"{type(self).__name__}({infos_str})"
+    
+    @abstractmethod
+    def _eq_impl(self, other) -> bool:
+        ...
+        
+    @abstractmethod
+    def _hash_impl(self) -> int:
+        ...
+    
+    @abstractmethod
+    def _repr_extra_infos(self) -> Dict[str, str]:
+        ...
+
+
+class Task(TaskBase):
+    job: Job
+
+    def __init__(self, job: Job):
+        super().__init__()
+        self.job = job
+
+    def _eq_impl(self, other):
         if not isinstance(other, Task):
             return NotImplemented
         
         return self.job == other.job
-    
-    def __hash__(self):
+
+    def _hash_impl(self):
         return hash((self.job.order, self.job.name))
     
-    def __repr__(self):
-        return f"Task(status={self.status}, job_name={self.job.name})"
+    def _repr_extra_infos(self):
+        return {
+            "job_name": self.job.name
+        }
+    
 
-
-class TaskS:
+class TaskS(TaskBase):
     page: int
-    status: Literal["Pendding", "Running", "Completed", "Failed"]
-    date_time: DateTime
 
     def __init__(self, page: int):
+        super().__init__()
         self.page = page
-        self.status = "Pendding"
-        self.date_time = None
-
-    def __eq__(self, other):
+    
+    def _eq_impl(self, other):
         if not isinstance(other, TaskS):
             return NotImplemented
         
         return self.page == other.page
     
-    def __hash__(self):
+    def _hash_impl(self):
         return hash((self.page, "salt"))
     
-    def __repr__(self):
-        return f"Task(status={self.status}, page={self.page})"
-
+    def _repr_extra_infos(self):
+        return {
+            "page": str(self.page)
+        }
+    
 
 class Queue:
-    tasks: Dict[str, Task] | Dict[str, TaskS]
+    tasks: Dict[str, TaskBase]
     
     def __init__(
             self,
-            tasks: List[Task] | List[TaskS]
+            tasks: List[TaskBase]
     ):
         self.tasks = {}
         for task in tasks:
@@ -140,7 +177,7 @@ class QueueMT(Queue):
     
     def __init__(
             self,
-            tasks: List[Task] | List[TaskS],
+            tasks: List[TaskBase],
             lock: threading.Lock
     ):
         super().__init__(tasks)
