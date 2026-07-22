@@ -2,6 +2,7 @@ import functools
 import threading
 from abc import ABC
 from abc import abstractmethod
+from collections import Counter
 from datetime import datetime as DateTime
 from typing import Dict
 from typing import List
@@ -118,6 +119,20 @@ class Queue:
         for task in tasks:
             key = str(hash(task))
             self.tasks[key] = task
+    
+    def __repr__(self):
+        counter = Counter(
+            task.status
+            for task in self.tasks.values()
+        )
+        
+        return (
+            f"{type(self).__name__}"
+            f"(Pending: {counter.get("Pendding", 0)}, "
+            f"Running: {counter.get("Running", 0)}, "
+            f"Completed: {counter.get("Completed", 0)}, "
+            f"Failed: {counter.get("Failed", 0)})"
+        )
         
     def get_task(self, task_key: str):
         task = self.tasks.get(task_key, None)
