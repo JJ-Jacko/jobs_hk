@@ -3,6 +3,7 @@ import threading
 from logging import Logger
 
 import jobs_hk.context as context
+from jobs_hk.db import DBMT
 from jobs_hk.exceptions import NeedWaiting
 from jobs_hk.exceptions import WebRetryExansted
 from jobs_hk.filters.job_search_filter import JobSearchFilter
@@ -16,6 +17,7 @@ from jobs_hk.web import JobGovHK
 
 def worker(
         logger: Logger,
+        db: DBMT,
         queue: QueueMT,
         proxy_pool: ProxyPool
 ):
@@ -51,7 +53,7 @@ def worker(
         jobs = filter.get_jobs()
         
         for job in jobs:
-            context.db.save_job(
+            db.save_job(
                 order=job["order"],
                 name=job["name"],
                 salary_type=job["salary_type"],
@@ -76,6 +78,7 @@ def fetch_total_pages():
 def run():
     logger = get_logger("search_multi_threads", multi_thread=True)
     lock = threading.Lock()
+    db = DBMT(context.engine, lock)
 
     total_pages = fetch_total_pages()
 
@@ -100,6 +103,7 @@ def run():
             target=worker,
             kwargs={
                 "logger": logger,
+                "db": db,
                 "queue": queue,
                 "proxy_pool": proxy_pool,
             },

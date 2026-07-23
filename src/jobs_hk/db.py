@@ -1,4 +1,5 @@
 import functools
+import threading
 from typing import List
 from typing import Dict
 
@@ -15,7 +16,10 @@ from jobs_hk.waiting import Waiting
 from jobs_hk.types import UNSET
 
 
-__all__ = ["DB"]
+__all__ = [
+    "DB",
+    "DBMT"
+]
 
 
 def db_retry(func):
@@ -38,6 +42,15 @@ def db_retry(func):
                 Waiting.normal(10, "Reconnect in [n]s")
                 continue
             break
+        return result
+    return wrapper
+
+
+def thread_lock(func):
+    @functools.wraps(func)
+    def wrapper(self: "DB", *args, **kwargs):
+        with self.lock:
+            result = func(self, *args, **kwargs)
         return result
     return wrapper
 
@@ -187,3 +200,52 @@ class DB:
             
             rows = res.mappings().all()
             return rows
+
+
+class DBMT(DB):
+    """Database Multi Thread Support"""
+
+    lock: threading.Lock
+    
+    def __init__(
+            self,
+            engine: sqlalchemy.Engine,
+            lock: threading.Lock
+    ):
+        super().__init__(engine)
+        self.lock = lock
+    
+    @thread_lock
+    def save_company(self, name, industry = UNSET):
+        return super().save_company(name, industry)
+    
+    @thread_lock
+    def save_contact(self, alias, phone, email):
+        return super().save_contact(alias, phone, email)
+    
+    @thread_lock
+    def save_job(
+            self,
+            order, name = UNSET, salary_type = UNSET,
+            salary_min = UNSET, salary_max = UNSET, address = UNSET,
+            company_name = UNSET, job_remark = UNSET, edu_remark = UNSET,
+            contact_alias = UNSET, prop_remark = UNSET, compensation = UNSET
+    ):
+        return super().save_job(
+            order, name, salary_type,
+            salary_min, salary_max, address,
+            company_name, job_remark, edu_remark,
+            contact_alias, prop_remark, compensation
+        )
+    
+    @thread_lock
+    def get_jobs_without_detailed(self):
+        return super().get_jobs_without_detailed()
+    
+    @thread_lock
+    def get_jobs_basic_info(self, limit = 10):
+        return super().get_jobs_basic_info(limit)
+    
+    @thread_lock
+    def get_jobs_specific_info(self, statement):
+        return super().get_jobs_specific_info(statement)

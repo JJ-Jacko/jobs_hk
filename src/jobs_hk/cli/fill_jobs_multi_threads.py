@@ -3,6 +3,7 @@ import time
 from logging import Logger
 
 import jobs_hk.context as context
+from jobs_hk.db import DBMT
 from jobs_hk.exceptions import NeedWaiting
 from jobs_hk.exceptions import WebRetryExansted
 from jobs_hk.filters.job_card_filter import JobCardFilter
@@ -16,6 +17,7 @@ from jobs_hk.web import JobGovHK
 
 def worker(
         logger: Logger,
+        db: DBMT,
         queue: QueueMT,
         proxy_pool: ProxyPool
 ):
@@ -50,16 +52,16 @@ def worker(
         filter = JobCardFilter(resp.text)
         job_info = filter.get_job_info()
 
-        context.db.save_company(
+        db.save_company(
             name=job_info["company_name"],
             industry=job_info["industry"]
         )
-        context.db.save_contact(
+        db.save_contact(
             alias=job_info["alias"],
             phone=job_info["phone"],
             email=job_info["email"]
         )
-        context.db.save_job(
+        db.save_job(
             order=job.order,
             company_name=job_info["company_name"],
             job_remark=job_info["job_remark"],
@@ -77,11 +79,12 @@ def worker(
 def run():
     logger = get_logger("fill_multi_threads", multi_thread=True)
     lock = threading.Lock()
+    db = DBMT(context.engine, lock)
     
     queue = QueueMT(
         [
             TaskFill(job)
-            for job in context.db.get_jobs_without_detailed()
+            for job in db.get_jobs_without_detailed()
         ],
         lock
     )
@@ -99,6 +102,7 @@ def run():
             target=worker,
             kwargs={
                 "logger": logger,
+                "db": db,
                 "queue": queue,
                 "proxy_pool": proxy_pool,
             },
