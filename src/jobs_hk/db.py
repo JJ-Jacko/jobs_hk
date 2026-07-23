@@ -150,7 +150,6 @@ class DB:
             address: str = UNSET,
             job_remark: str = UNSET,
             edu_remark: str = UNSET,
-            prop_remark: str = UNSET,
             compensation: str = UNSET,
             company_id: int = UNSET,
             contact_id: int = UNSET
@@ -170,7 +169,6 @@ class DB:
             "address": address,
             "job_remark": job_remark,
             "edu_remark": edu_remark,
-            "prop_remark": prop_remark,
             "compensation": compensation,
             "company_id": company_id,
             "contact_id": contact_id
@@ -278,13 +276,13 @@ class DBMT(DB):
             order, name = UNSET, salary_type = UNSET,
             salary_min = UNSET, salary_max = UNSET, address = UNSET,
             company_name = UNSET, job_remark = UNSET, edu_remark = UNSET,
-            contact_alias = UNSET, prop_remark = UNSET, compensation = UNSET
+            contact_alias = UNSET, compensation = UNSET
     ):
         return super().save_job(
             order, name, salary_type,
             salary_min, salary_max, address,
             company_name, job_remark, edu_remark,
-            contact_alias, prop_remark, compensation
+            contact_alias, compensation
         )
     
     @thread_lock

@@ -17,7 +17,6 @@ class Job(SQLModel, table=True):
     address: Optional[str] = Field(default=None)
     job_remark: Optional[str] = Field(default=None)
     edu_remark: Optional[str] = Field(default=None)
-    prop_remark: Optional[str] = Field(default=None)
     compensation: Optional[str] = Field(default=None)
     
     company_id: Optional[int] = Field(default=None, foreign_key="companies.id")

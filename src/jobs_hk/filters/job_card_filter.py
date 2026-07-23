@@ -40,8 +40,6 @@ class JobCardFilter:
         phone_formated = f"{phone[:4]} {phone[4:]}" if phone else None
         alias = match_re(r'(\S(?:先生|小姐|女士))', openup_remark)
         
-        prop_remark = fill_none(self.soup.find("span", id="propRemark").get_text(strip=True))
-        
         return {
             "num": num,
             "post_date": post_date,
@@ -53,6 +51,5 @@ class JobCardFilter:
             "compensation": compensation,
             "email": email,
             "phone": phone_formated,
-            "alias": alias,
-            "prop_remark": prop_remark
+            "alias": alias
         }

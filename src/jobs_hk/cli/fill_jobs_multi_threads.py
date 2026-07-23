@@ -67,7 +67,6 @@ def worker(
             job_remark=job_info["job_remark"],
             edu_remark=job_info["edu_remark"],
             contact_alias=job_info["alias"],
-            prop_remark=job_info["prop_remark"],
             compensation=job_info["compensation"]
         )
         

@@ -39,7 +39,6 @@ def run():
             order=job.order,
             job_remark=job_info["job_remark"],
             edu_remark=job_info["edu_remark"],
-            prop_remark=job_info["prop_remark"],
             compensation=job_info["compensation"],
             company_id=company_id,
             contact_id=contact_id,
