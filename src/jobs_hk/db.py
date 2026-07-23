@@ -66,21 +66,39 @@ class DB:
             self,
             name: str,
             industry: str = UNSET
-    ):
+    ) -> int:
+        """
+        Save company and return company id.
+
+        Returns:
+            company_id: id of company.
+        """
+        
         payload = {
             "industry": industry
         }
         updates = get_fields_setted(payload)
     
         with Session(self.engine) as s:
-            company = s.get(Company, name)
+            statement = (
+                select(Company)
+                .where(Company.name == name)
+            )
+            company = s.exec(statement).first()
+            
             if company:
                 for field, value in updates.items():
                     setattr(company, field, value)
-            else:
-                s.add(Company(name=name, **updates))
+                
+                s.commit()
+                return company.id
             
-            s.commit()
+            else:
+                new_company = Company(name=name, **updates)
+                s.add(new_company)
+            
+                s.commit()
+                return new_company.id
     
     @db_retry
     def save_contact(
@@ -88,21 +106,38 @@ class DB:
             alias: str,
             phone: str,
             email: str
-    ):
+    ) -> int:
+        """
+        Save contact and return contact id.
+
+        Returns:
+            contact_id: id of contact.
+        """
+        
         with Session(self.engine) as s:
-            contact = s.exec(select(Contact).where(
-                Contact.alias == alias,
-                Contact.email == email,
-                Contact.phone == phone
-            )).first()
-            if contact is None:
-                s.add(Contact(
+            statement = (
+                select(Contact)
+                .where(
+                    Contact.alias == alias,
+                    Contact.email == email,
+                    Contact.phone == phone
+                )
+            )
+            contact = s.exec(statement).first()
+            
+            if contact:
+                return contact.id
+
+            else:
+                new_contact = Contact(
                     alias=alias,
                     phone=phone,
                     email=email
-                ))
+                )
+                s.add(new_contact)
             
-            s.commit()
+                s.commit()
+                return new_contact.id
             
     @db_retry
     def save_job(
@@ -113,37 +148,51 @@ class DB:
             salary_min: int = UNSET,
             salary_max: int = UNSET,
             address: str = UNSET,
-            company_name: str = UNSET,
             job_remark: str = UNSET,
             edu_remark: str = UNSET,
-            contact_alias: str = UNSET,
             prop_remark: str = UNSET,
-            compensation: str = UNSET
-    ):
+            compensation: str = UNSET,
+            company_id: int = UNSET,
+            contact_id: int = UNSET
+    ) -> str:
+        """
+        Save job and return job order.
+
+        Returns:
+            job_order: id of job.
+        """
+        
         payload = {
             "name": name,
             "salary_type": salary_type,
             "salary_min": salary_min,
             "salary_max": salary_max,
             "address": address,
-            "company_name": company_name,
             "job_remark": job_remark,
             "edu_remark": edu_remark,
-            "contact_alias": contact_alias,
             "prop_remark": prop_remark,
-            "compensation": compensation
+            "compensation": compensation,
+            "company_id": company_id,
+            "contact_id": contact_id
         }
         updates = get_fields_setted(payload)
 
         with Session(self.engine) as s:
             job = s.get(Job, order)
+            
             if job:
                 for field, value in updates.items():
                     setattr(job, field, value)
-            else:
-                s.add(Job(order=order, **updates))
+                
+                s.commit()
+                return job.order
             
-            s.commit()
+            else:
+                new_job = Job(order=order, **updates)
+                s.add(new_job)
+            
+                s.commit()
+                return new_job.order
 
     @db_retry
     def get_jobs_without_detailed(self):

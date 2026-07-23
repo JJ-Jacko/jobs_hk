@@ -15,12 +15,13 @@ class Job(SQLModel, table=True):
     salary_min: Optional[int] = Field(default=None)
     salary_max: Optional[int] = Field(default=None)
     address: Optional[str] = Field(default=None)
-    company_name: Optional[str] = Field(default=None, foreign_key="companies.name")
     job_remark: Optional[str] = Field(default=None)
     edu_remark: Optional[str] = Field(default=None)
-    contact_alias: Optional[str] = Field(default=None, foreign_key="contacts.alias")
     prop_remark: Optional[str] = Field(default=None)
     compensation: Optional[str] = Field(default=None)
+    
+    company_id: Optional[int] = Field(default=None, foreign_key="companies.id")
+    contact_id: Optional[int] = Field(default=None, foreign_key="contacts.id")
     
     company: Optional["Company"] = Relationship(back_populates="jobs")
     contact: Optional["Contact"] = Relationship(back_populates="jobs")
@@ -29,7 +30,8 @@ class Job(SQLModel, table=True):
 class Company(SQLModel, table=True):
     __tablename__ = "companies"
 
-    name: Optional[str] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    name: Optional[str] = Field(default=None, unique=True, index=True)
     industry: Optional[str] = Field(default=None)
     
     jobs: List[Job] = Relationship(back_populates="company")
@@ -39,7 +41,7 @@ class Contact(SQLModel, table=True):
     __tablename__ = "contacts"
 
     id: Optional[int] = Field(default=None, primary_key=True)
-    alias: Optional[str] = Field(default=None)
+    alias: Optional[str] = Field(default=None, index=True)
     phone: Optional[str] = Field(default=None)
     email: Optional[str] = Field(default=None)
     
