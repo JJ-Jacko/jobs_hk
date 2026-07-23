@@ -6,6 +6,7 @@ import jobs_hk.context as context
 from jobs_hk.env import get_ddl_text
 from jobs_hk.exceptions import ModelGenerateException
 from jobs_hk.exceptions import SQLStatementExecException
+from jobs_hk.db import DB
 from jobs_hk.other import keywords_in_text
 from jobs_hk.schemas import SQLGen
 
@@ -15,12 +16,18 @@ __all__ = ["Assistant"]
 
 class Assistant:
     client: ollama.Client
+    db: DB
     tools: Dict[str, function]
 
-    def __init__(self, host: str):
+    def __init__(
+            self,
+            host: str,
+            db: DB
+    ):
         self.client = ollama.Client(host)
+        self.db = db
         self.tools = {
-            "get_jobs_basic_info": context.db.get_jobs_basic_info,
+            "get_jobs_basic_info": self.db.get_jobs_basic_info,
             "query_jobs_database": self.query_jobs_database
         }
 
@@ -191,7 +198,7 @@ class Assistant:
             )
         
         try:
-            info = context.db.get_jobs_specific_info(statement)
+            info = self.db.get_jobs_specific_info(statement)
         except SQLStatementExecException as e:
             return (
                 "Query execution FAILED.\n"

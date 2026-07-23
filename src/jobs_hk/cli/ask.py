@@ -1,9 +1,14 @@
 import jobs_hk.context as context
+from jobs_hk.db import DB
 from jobs_hk.services.assistant import Assistant
 
     
 def run():
-    service = Assistant(context.project_config["ollama"]["host"])
+    db = DB(context.engine)
+    service = Assistant(
+        host=context.project_config["ollama"]["host"],
+        db=db
+    )
     
     while True:
         user_prompt = input(">>> ")

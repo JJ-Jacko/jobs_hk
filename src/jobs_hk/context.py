@@ -12,10 +12,7 @@ __all__ = [
     "f_project_assistant",
 
     # Config
-    "project_config",
-
-    # Other
-    "db"
+    "project_config"
 ]
 
 
@@ -31,4 +28,3 @@ project_config = load_config(f_project_config)
 
 engine = get_engine()
 init_database(engine)
-db = DB(engine)

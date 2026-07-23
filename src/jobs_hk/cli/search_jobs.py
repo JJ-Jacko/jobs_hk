@@ -1,6 +1,7 @@
 import itertools
 
 import jobs_hk.context as context
+from jobs_hk.db import DB
 from jobs_hk.filters.job_search_filter import JobSearchFilter
 from jobs_hk.log import get_logger
 from jobs_hk.waiting import Waiting
@@ -11,6 +12,7 @@ def run():
     logger = get_logger("search")
     waiting = Waiting()
     web = JobGovHK()
+    db = DB(context.engine)
     
     for page in itertools.count(1):
         logger.info(f"Processing page: {page}")
@@ -21,7 +23,7 @@ def run():
         jobs = sf.get_jobs()
         
         for job in jobs:
-            context.db.save_job(
+            db.save_job(
                 order=job["order"],
                 name=job["name"],
                 salary_type=job["salary_type"],
