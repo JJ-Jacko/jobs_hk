@@ -1,3 +1,7 @@
+from typing import Any
+from typing import Dict
+from typing import List
+
 from mcp.server.fastmcp import FastMCP
 
 import jobs_hk.context as context
@@ -9,7 +13,7 @@ db = DB(context.engine)
 
 
 @mcp.tool()
-def get_jobs_basic_info(num: int = 5) -> str:
+def get_jobs_basic_info(num: int = 5) -> List[Dict[str, Any]]:
     """
     Get the Hongkong jobs basic information in the project database.
     
@@ -20,7 +24,7 @@ def get_jobs_basic_info(num: int = 5) -> str:
     
     info = db.get_jobs_basic_info(num)
     
-    return str(info)
+    return info
 
 
 if __name__ == "__main__":
