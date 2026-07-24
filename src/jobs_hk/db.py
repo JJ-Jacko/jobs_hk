@@ -1,5 +1,6 @@
 import functools
 import threading
+from typing import Any
 from typing import List
 from typing import Dict
 
@@ -218,7 +219,7 @@ class DB:
             )
             infos = s.exec(statement).all()
             
-        res: List[Dict[str]] = [
+        res: List[Dict[str, Any]] = [
             info._asdict()
             for info in infos
         ]
