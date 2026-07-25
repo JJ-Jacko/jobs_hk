@@ -81,3 +81,54 @@ host = "192.168.6.101"
 chat_model = "llama3.2:3b"      # 聊天模型
 code_model = "qwen2.5-coder:7b" # 编程模型
 ```
+#### 询问
+```sh
+run-ask
+```
+> **注意：** 输出结果过多，已将大部分内容用 `...` 略过
+* 基础查询
+    ```txt
+    >>> I want to know the basic infomation about the scrapered jobs
+    ```
+    ```md
+    Here is a sample of recently scraped jobs from the project database:
+
+    | Job Position | Salary Type | Monthly Range (HKD) | Location |
+    | :--- | :--- | :--- | :--- |
+    | 助理大廈主管 (日更, 柴灣) | 月薪 | HK$22,000 - 22,500 | 柴灣 |
+
+    ...
+
+    | 公司司機(東涌) | 月薪 | HK$18,000 - 18,500 | 東涌 |
+
+    Would you like to see more details about specific roles or filter the results further?
+    ```
+* 增强查询(SQL 语句流)
+    ```txt
+    >>> Find all jobs with salary type as monthly salary and min salary above 30000.
+    ```
+    ```md
+    Here are the jobs matching your criteria (Monthly Salary with minimum of HK$30,001 or above):
+
+    | Job Name | Min Monthly Salary | Max Monthly Salary | Location |
+    | :--- | :---: | :---: | :--- |
+    | **中港跨境貨車司機** (Cross-border truck driver) | $38,000 | $38,000 | 葵涌，內地 |
+
+    ...
+    
+    | **註冊安全主任** (Registered Safety Officer) - repeat entry | $35,000 | $45,000 | 元朗 |
+
+    Would you like me to filter results further by a specific job title or company?
+    ```
+#### MCP
+```json
+"Jobs HongKong": {
+    "type": "stdio",
+    "command": "uv",
+    "args": [
+        "run",
+        "-m",
+        "jobs_hk.server"
+    ]
+}
+```
