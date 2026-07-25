@@ -19,3 +19,8 @@ run-fill-job = "jobs_hk.cli.fill_jobs:run"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "debugpy",
+]

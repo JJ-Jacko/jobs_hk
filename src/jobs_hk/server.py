@@ -8,7 +8,7 @@ import jobs_hk.context as context
 from jobs_hk.db import DB
 
 
-mcp = FastMCP("Jobs HongKong", port=8080)
+mcp = FastMCP("Jobs HongKong")
 db = DB(context.engine)
 
 
@@ -28,5 +28,5 @@ def get_jobs_basic_info(num: int = 5) -> List[Dict[str, Any]]:
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    mcp.run(transport="stdio")
     
