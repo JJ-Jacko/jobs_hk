@@ -73,7 +73,7 @@ rate = 0.75         # 實際創建的綫程占代理端口總數的比
     2026-07-25 15:41:45 - [Worker-1] - INFO - Processing job: 機械技術員
     2026-07-25 15:41:53 - [Worker-3] - INFO - Processing job: 合約工程助理
     ```
-### 🤖 智能体
+🤖 智能體
 配置文件 `config.toml`
 ```toml
 [ollama]
