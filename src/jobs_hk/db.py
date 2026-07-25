@@ -203,8 +203,13 @@ class DB:
             return jobs
 
     @db_retry
-    def get_jobs_basic_info(self, limit: int = 10):
-        """Get the Hongkong jobs basic information in the project database"""
+    def get_jobs_basic_info(self, num: int = 10):
+        """
+        Get the Hongkong jobs basic information in the project database.
+        
+        Args:
+            num: The number of the jobs basic info of Hongkong Jobs database.
+        """
         
         with Session(self.engine) as s:
             statement = (
@@ -215,7 +220,7 @@ class DB:
                     Job.salary_max,
                     Job.address
                 )
-                .limit(limit)
+                .limit(num)
             )
             infos = s.exec(statement).all()
             
