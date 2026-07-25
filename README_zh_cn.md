@@ -24,7 +24,7 @@ flowchart
         fill_job_mt[并发填充岗位详情]
     end
 
-    subgraph SQL_pipline["📊 SQL 管线"]
+    subgraph SQL_pipline["📊 文本转 SQL 管线"]
         SQL_generator[SQL 生成器]
         SQL_runner[SQL 运行器]
         SQL_checker[SQL 检查器]

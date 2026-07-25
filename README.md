@@ -24,7 +24,7 @@ flowchart
         fill_job_mt[Fill Job Details MT]
     end
 
-    subgraph SQL_pipline["📊 SQL Pipline"]
+    subgraph SQL_pipline["📊 Text-to-SQL Pipline"]
         SQL_generator[SQL Generator]
         SQL_runner[SQL Runner]
         SQL_checker[SQL Checker]
