@@ -1,5 +1,5 @@
 [ollama]
-host = "192.168.6.101"
+host = "127.0.0.1"
 chat_model = "qwen3.5:4b"
 code_model = "qwen2.5-coder:7b"
 
