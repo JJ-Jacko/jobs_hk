@@ -1,4 +1,4 @@
-# Hong Kong Labour Department Job Listing Scraper
+# Hong Kong Labour Department Job Listing Scraper & AI Agent
 
 **Languages:** [简中](README_zh_cn.md) | [繁中](README_zh_hk.md)
 
@@ -11,20 +11,13 @@ The scraper fetches job listing pages via Python's `requests` library, parses HT
 
 
 ## 🚀 Usage
-### Activate Environment
+### 🛠️ Environment
+Activate Environment
 ```sh
 uv sync
 source .venv/bin/activate
 ```
-`config.toml`
-```toml
-[ollama]
-host = "192.168.6.101"
-chat_model = "llama3.2:3b"
-code_model = "qwen2.5-coder:7b"
-```
-
-### Run
+### 🕷️ Web Scraper
 #### Common
 Common web scrapering don't need to configure proxy.
 * Search Job Listings
@@ -80,3 +73,11 @@ rate = 0.75         # The percentage of threads actually created out of the tota
     2026-07-25 15:41:45 - [Worker-1] - INFO - Processing job: 機械技術員
     2026-07-25 15:41:53 - [Worker-3] - INFO - Processing job: 合約工程助理
     ```
+### 🤖 AI Agent
+Configuration file `config.toml`
+```toml
+[ollama]
+host = "192.168.6.101"
+chat_model = "llama3.2:3b"
+code_model = "qwen2.5-coder:7b"
+```

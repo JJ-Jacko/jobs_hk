@@ -1,4 +1,4 @@
-# 香港劳工处招聘信息爬虫
+# 香港劳工处招聘信息爬虫与智能体
 
 **Languages:** [English](README.md) | [繁中](README_zh_hk.md)
 
@@ -11,20 +11,13 @@
 
 
 ## 🚀 使用方法
-### 激活环境
+### 🛠️ 环境
+激活环境
 ```sh
 uv sync
 source .venv/bin/activate
 ```
-`config.toml`
-```toml
-[ollama]
-host = "192.168.6.101"
-chat_model = "llama3.2:3b"
-code_model = "qwen2.5-coder:7b"
-```
-
-### 运行
+### 🕷️ 爬虫
 #### 常规
 常规爬虫无需配置代理
 * 搜索工作信息
@@ -80,3 +73,11 @@ rate = 0.75         # 实际创建的线程占代理端口总数的比
     2026-07-25 15:41:45 - [Worker-1] - INFO - Processing job: 機械技術員
     2026-07-25 15:41:53 - [Worker-3] - INFO - Processing job: 合約工程助理
     ```
+### 🤖 智能体
+配置文件 `config.toml`
+```toml
+[ollama]
+host = "192.168.6.101"
+chat_model = "llama3.2:3b"      # 聊天模型
+code_model = "qwen2.5-coder:7b" # 编程模型
+```
