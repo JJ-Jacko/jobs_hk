@@ -9,6 +9,68 @@ The scraper fetches job listing pages via Python's `requests` library, parses HT
 
 > **Note:** This project strictly complies with the site's `robots.txt` rules. If you have any concerns, please contact me via email. Any fork of this project must also be developed in accordance with applicable laws and regulations.
 
+## 🏗️ Structure
+```mermaid
+flowchart
+    subgraph User["👤 User"]
+        CLI[CLI]
+        MCP_CLIENT[MCP Client]
+    end
+
+    subgraph Scraper["🕷️ Web Scraper"]
+        search_job[Search Jobs]
+        search_job_mt[Search Jobs MT]
+        fill_job[Fill Job Details]
+        fill_job_mt[Fill Job Details MT]
+    end
+
+    subgraph SQL_pipline["📊 SQL Pipline"]
+        SQL_generator[SQL Generator]
+        SQL_runner[SQL Runner]
+        SQL_checker[SQL Checker]
+    end
+
+    subgraph AI["🤖 AI Agent"]
+        chat[Chat]
+        MCP_server[MCP Server]
+        SQL_pipline
+    end
+
+    subgraph Service["⚙️ Service"]
+        Ollama[Ollama]
+        SQLite[(SQLite)]
+    end
+
+    subgraph DataSource["🌐 Data Source"]
+        web_src[Hong Kong Labour Department]
+    end
+
+    CLI <--> chat
+    MCP_CLIENT <--> MCP_server
+
+    chat <--> Ollama
+    chat --> SQL_generator
+
+    MCP_server --> SQL_generator
+
+    SQL_generator --> SQL_runner
+    SQL_generator <--> Ollama
+
+    SQL_runner --> SQL_checker
+    SQL_runner <--> SQLite
+
+    SQL_checker --> chat
+    SQL_checker --> MCP_server
+
+    web_src --> search_job
+    web_src --> search_job_mt
+
+    search_job --> fill_job
+    search_job_mt --> fill_job_mt
+
+    fill_job --> SQLite
+    fill_job_mt --> SQLite
+```
 
 ## 🚀 Usage
 ### 🛠️ Environment
@@ -81,7 +143,7 @@ host = "192.168.6.101"
 chat_model = "llama3.2:3b"
 code_model = "qwen2.5-coder:7b"
 ```
-#### ASK
+#### Chat
 ```sh
 run-ask
 ```

@@ -9,6 +9,68 @@
 
 > **注意：** 本项目严格遵守该网站 `robots.txt` 的相关规范，如有冒犯，请通过 email 与我联系，本项目的任何 fork 亦须依法合规开发
 
+## 🏗️ Structure
+```mermaid
+flowchart
+    subgraph User["👤 用户"]
+        CLI[命令行]
+        MCP_CLIENT[MCP 客户端]
+    end
+
+    subgraph Scraper["🕷️ 网络爬虫"]
+        search_job[搜索岗位]
+        search_job_mt[并发搜索岗位]
+        fill_job[填充岗位详情]
+        fill_job_mt[并发填充岗位详情]
+    end
+
+    subgraph SQL_pipline["📊 SQL 管线"]
+        SQL_generator[SQL 生成器]
+        SQL_runner[SQL 运行器]
+        SQL_checker[SQL 检查器]
+    end
+
+    subgraph AI["🤖 智能体"]
+        chat[聊天]
+        MCP_server[MCP 服务端]
+        SQL_pipline
+    end
+
+    subgraph Service["⚙️ 服务"]
+        Ollama[Ollama]
+        SQLite[(SQLite)]
+    end
+
+    subgraph DataSource["🌐 数据源"]
+        web_src[香港劳工处官网]
+    end
+
+    CLI <--> chat
+    MCP_CLIENT <--> MCP_server
+
+    chat <--> Ollama
+    chat --> SQL_generator
+
+    MCP_server --> SQL_generator
+
+    SQL_generator --> SQL_runner
+    SQL_generator <--> Ollama
+
+    SQL_runner --> SQL_checker
+    SQL_runner <--> SQLite
+
+    SQL_checker --> chat
+    SQL_checker --> MCP_server
+
+    web_src --> search_job
+    web_src --> search_job_mt
+
+    search_job --> fill_job
+    search_job_mt --> fill_job_mt
+
+    fill_job --> SQLite
+    fill_job_mt --> SQLite
+```
 
 ## 🚀 使用方法
 ### 🛠️ 环境
