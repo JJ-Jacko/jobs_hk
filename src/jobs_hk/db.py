@@ -18,6 +18,7 @@ from sqlalchemy.schema import CreateTable
 from jobs_hk.datas import Company
 from jobs_hk.datas import Contact
 from jobs_hk.datas import Job
+from jobs_hk.exceptions import DatabaseReadOnlyError
 from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.other import get_fields_setted
 from jobs_hk.types import UNSET
@@ -47,7 +48,10 @@ def db_retry(func):
             
             try:
                 result = func(*args, **kwargs)
-            except sqlalchemy.exc.OperationalError:
+            except sqlalchemy.exc.OperationalError as e:
+                if "attempt to write a readonly database" in str(e):
+                    raise DatabaseReadOnlyError
+                
                 time.sleep(3)
                 continue
             
@@ -70,12 +74,37 @@ def thread_lock(func):
 class DB:
     engine: sqlalchemy.Engine
     
-    def __init__(self, database_file: Path):
-        engine = create_engine(f"sqlite:///{str(database_file)}")
-        self.engine = engine
+    def __init__(
+            self,
+            database_file: Path,
+            *,
+            read_only: bool
+    ):
+        """
+        Args:
+            read_only:
+                If you only want to query data, set it True.
+                Else you want to write data, set it False.
+
+        Raises:
+            FileNotFoundError: Database file does not exist when `read_only` set True.
+        """
         
-        if not database_file.exists():
-            self.__create_database()
+        if read_only:
+            if not database_file.exists():
+                raise FileNotFoundError((
+                    f"Database file {database_file} does not exist."
+                    "Can not open in read-only mode"
+                ))
+            
+            engine = create_engine(f"sqlite:///file:{database_file}?mode=ro&uri=true")
+            self.engine = engine
+        else:
+            engine = create_engine(f"sqlite:///{database_file}")
+            self.engine = engine
+            
+            if not database_file.exists():
+                self.__create_database()
     
     @db_retry
     def __create_database(self):
@@ -293,9 +322,21 @@ class DBMT(DB):
     def __init__(
             self,
             database_file: Path,
-            lock: threading.Lock
+            lock: threading.Lock,
+            *,
+            read_only: bool
     ):
-        super().__init__(database_file)
+        """
+        Args:
+            read_only:
+                If you only want to query data, set it True.
+                Else you want to write data, set it False.
+
+        Raises:
+            FileNotFoundError: Database file does not exist when `read_only` set True.
+        """
+        
+        super().__init__(database_file, read_only=read_only)
         self.lock = lock
     
     @thread_lock

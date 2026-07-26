@@ -9,7 +9,7 @@ mcp = FastMCP("Jobs HongKong")
 
 
 if __name__ == "__main__":
-    db = DB(context.DATA_BASE_FILE)
+    db = DB(context.DATA_BASE_FILE, read_only=True)
     service = Assistant(
         host=context.CONFIG["ollama"]["host"],
         db=db

@@ -12,7 +12,7 @@ def run():
     logger = get_logger("fill")
     waiting = Waiting()
     web = JobGovHK()
-    db = DB(context.DATA_BASE_FILE)
+    db = DB(context.DATA_BASE_FILE, read_only=False)
     queue = Queue([
         TaskFill(job)
         for job in db.get_jobs_without_detailed()

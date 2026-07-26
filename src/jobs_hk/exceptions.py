@@ -58,3 +58,7 @@ class WebRetryExansted(Exception):
 
 class NeedWaiting(Exception):
     ...
+
+
+class DatabaseReadOnlyError(Exception):
+    ...

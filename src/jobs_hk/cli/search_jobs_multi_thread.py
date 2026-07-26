@@ -78,7 +78,7 @@ def fetch_total_pages():
 def run():
     logger = get_logger("search_multi_threads", multi_thread=True)
     lock = threading.Lock()
-    db = DBMT(context.DATA_BASE_FILE, lock)
+    db = DBMT(context.DATA_BASE_FILE, lock, read_only=False)
 
     total_pages = fetch_total_pages()
 
