@@ -7,7 +7,10 @@ The Hong Kong Labour Department publishes a large number of job listings publicl
 
 The scraper fetches job listing pages via Python's `requests` library, parses HTML elements with `BeautifulSoup`, and cleans and organises the extracted information using regular expressions. The structured data is then stored in a `SQLite` database.
 
-> **Note:** This project strictly complies with the site's `robots.txt` rules. If you have any concerns, please contact me via email. Any fork of this project must also be developed in accordance with applicable laws and regulations.
+> **Disclaimer:**
+> 1. This project strictly complies with the `robots.txt` specifications and is licensed under the MIT License.
+> 2. Any third-party forks or derivative works based on this project represent the independent actions of their respective developers and have no association with this project or the original author.
+> 3. Developers shall be solely responsible for any legal liability arising from the use or modification of this source code.
 
 ## 🏗️ Structure
 ```mermaid
