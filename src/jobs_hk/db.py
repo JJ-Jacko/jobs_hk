@@ -6,9 +6,12 @@ from typing import List
 from typing import Dict
 
 import sqlalchemy
+import sqlalchemy.dialects as dialects
 from sqlmodel import create_engine
 from sqlmodel import select
 from sqlmodel import Session
+from sqlmodel import SQLModel
+from sqlalchemy.schema import CreateTable
 
 from jobs_hk.datas import Company
 from jobs_hk.datas import Contact
@@ -73,6 +76,15 @@ class DB:
         Job.metadata.create_all(self.engine)
         Company.metadata.create_all(self.engine)
         Contact.metadata.create_all(self.engine)
+    
+    def get_ddl_text(self):
+        ddl_text = ""
+        
+        for table in SQLModel.metadata.sorted_tables:
+            sql_compiled = CreateTable(table).compile(dialect=dialects.sqlite.dialect())
+            ddl_text += f"{str(sql_compiled).strip()};\n\n"
+        
+        return ddl_text
     
     @db_retry
     def save_company(

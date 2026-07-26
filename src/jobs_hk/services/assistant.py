@@ -3,7 +3,6 @@ from typing import Dict
 import ollama
 
 import jobs_hk.context as context
-from jobs_hk.env import get_ddl_text
 from jobs_hk.exceptions import ModelGenerateException
 from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.db import DB
@@ -84,7 +83,7 @@ class Assistant:
                 - CRITICAL: Do NOT use vague or conversational phrasing, or the model will fail.
         """
         
-        ddl_text = get_ddl_text()
+        ddl_text = self.db.get_ddl_text()
         system_prompt_template = context.f_sql_generator_sqlite_only.read_text()
         system_prompt = system_prompt_template.format(ddl_text=ddl_text)
         
