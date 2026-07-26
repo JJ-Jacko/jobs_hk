@@ -18,9 +18,9 @@ def run():
         logger.info(f"Processing page: {page}")
         
         resp = web.job_search(page)
-        sf = JobSearchFilter(resp.text)
-        total_pages = sf.get_total_pages()
-        jobs = sf.get_jobs()
+        filter = JobSearchFilter(resp.text)
+        total_pages = filter.get_total_pages()
+        jobs = filter.get_jobs()
         
         for job in jobs:
             db.save_job(
