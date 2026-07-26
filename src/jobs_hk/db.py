@@ -1,5 +1,7 @@
 import functools
+import itertools
 import threading
+import time
 from pathlib import Path
 from typing import Any
 from typing import List
@@ -18,7 +20,6 @@ from jobs_hk.datas import Contact
 from jobs_hk.datas import Job
 from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.other import get_fields_setted
-from jobs_hk.waiting import Waiting
 from jobs_hk.types import UNSET
 
 
@@ -29,26 +30,31 @@ __all__ = [
 
 
 def db_retry(func):
-    """Decorator for retrying database operations in case of disconnection 修饰访问数据库的函数断联后尝试重连
+    """
+    Decorator for retrying database operations in case of disconnection.
+    修饰访问数据库的函数断联后尝试重连
 
     Raises:
-        Exception: Raised when multiple attempts to reconnect fail 多次尝试重连都无法连上
+        Exception: Raised when multiple attempts to reconnect fail.
+        多次尝试重连都无法连上
     """
     
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        count_retry = 0
-        while True:
-            if count_retry > 10:
+        for attempt in itertools.count(0):
+            if attempt > 10:
                 raise Exception("Database connection failed after multiple retries")
+            
             try:
                 result = func(*args, **kwargs)
             except sqlalchemy.OperationalError:
-                count_retry += 1
-                Waiting.normal(10, "Reconnect in [n]s")
+                time.sleep(10)
                 continue
+            
             break
+        
         return result
+
     return wrapper
 
 
