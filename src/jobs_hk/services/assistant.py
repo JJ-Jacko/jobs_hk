@@ -31,7 +31,7 @@ class Assistant:
         }
 
     def chat(self, user_prompt: str):
-        system_prompt = context.ASSISTANT_FILE.read_text()
+        system_prompt = context.PROMPTS.PROJECT_ASSISTANT.read_text()
         
         messages = [
             {
@@ -84,7 +84,7 @@ class Assistant:
         """
         
         ddl_text = self.db.get_ddl_text()
-        system_prompt_template = context.SQL_GENERATOR_SQLITE_ONLY_FILE.read_text()
+        system_prompt_template = context.PROMPTS.SQL_GENERATOR.read_text()
         system_prompt = system_prompt_template.format(ddl_text=ddl_text)
         
         messages = [
