@@ -1,6 +1,6 @@
 # Hong Kong Labour Department Job Listing Scraper & AI Agent
 
-**Languages:** [简中](README_zh_cn.md) | [繁中](README_zh_hk.md)
+**Languages:** [简体中文](README_zh_cn.md) | [繁體中文](README_zh_hk.md)
 
 ## 📋 Description
 The Hong Kong Labour Department publishes a large number of job listings publicly, but manually collecting them one by one is highly inefficient. This project aims to automatically aggregate this data in one place, making it easier to analyse and apply for jobs.

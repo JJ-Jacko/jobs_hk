@@ -1,6 +1,6 @@
 # 香港劳工处招聘信息爬虫与智能体
 
-**Languages:** [English](README.md) | [繁中](README_zh_hk.md)
+**Languages:** [English](README.md) | [繁體中文](README_zh_hk.md)
 
 ## 📋 描述
 香港劳工处公开了大量招聘信息，但人工逐一收集效率低下，本项目旨在自动化地集中抓取这些数据，便于统一分析与求职投递。
