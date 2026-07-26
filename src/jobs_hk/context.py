@@ -5,22 +5,22 @@ from jobs_hk.other import load_config
 
 __all__ = [
     # Path
-    "f_project_database",
-    "f_sql_generator_sqlite_only",
-    "f_project_assistant",
+    "DATA_BASE_FILE",
+    "SQL_GENERATOR_SQLITE_ONLY_FILE",
+    "ASSISTANT_FILE",
 
     # Config
-    "project_config"
+    "CONFIG"
 ]
 
 
 # Path
-d_prompts = Path("prompts")
+PROMPTS_DIR = Path("prompts")
 
-f_project_database = Path("data.db")
-f_project_config = Path("config.toml")
-f_sql_generator_sqlite_only = d_prompts / "sql_generator_sqlite_only.md"
-f_project_assistant = d_prompts / "project_assistant.md"
+DATA_BASE_FILE = Path("data.db")
+CONFIG_FILE = Path("config.toml")
+SQL_GENERATOR_SQLITE_ONLY_FILE = PROMPTS_DIR / "sql_generator_sqlite_only.md"
+ASSISTANT_FILE = PROMPTS_DIR / "project_assistant.md"
 
 # Initialization
-project_config = load_config(f_project_config)
+CONFIG = load_config(CONFIG_FILE)

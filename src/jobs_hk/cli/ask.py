@@ -4,9 +4,9 @@ from jobs_hk.services.assistant import Assistant
 
     
 def run():
-    db = DB(context.f_project_database)
+    db = DB(context.DATA_BASE_FILE)
     service = Assistant(
-        host=context.project_config["ollama"]["host"],
+        host=context.CONFIG["ollama"]["host"],
         db=db
     )
     

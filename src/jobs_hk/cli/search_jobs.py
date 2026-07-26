@@ -12,7 +12,7 @@ def run():
     logger = get_logger("search")
     waiting = Waiting()
     web = JobGovHK()
-    db = DB(context.f_project_database)
+    db = DB(context.DATA_BASE_FILE)
     
     for page in itertools.count(1):
         logger.info(f"Processing page: {page}")

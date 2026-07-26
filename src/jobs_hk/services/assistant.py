@@ -31,7 +31,7 @@ class Assistant:
         }
 
     def chat(self, user_prompt: str):
-        system_prompt = context.f_project_assistant.read_text()
+        system_prompt = context.ASSISTANT_FILE.read_text()
         
         messages = [
             {
@@ -45,7 +45,7 @@ class Assistant:
         ]
         
         resp = self.client.chat(
-            model=context.project_config["ollama"]["chat_model"],
+            model=context.CONFIG["ollama"]["chat_model"],
             messages=messages,
             think=False,
             tools=self.tools.values()
@@ -63,7 +63,7 @@ class Assistant:
                 })
             
             resp = self.client.chat(
-                model=context.project_config["ollama"]["chat_model"],
+                model=context.CONFIG["ollama"]["chat_model"],
                 messages=messages,
                 think=False,
                 options={
@@ -84,7 +84,7 @@ class Assistant:
         """
         
         ddl_text = self.db.get_ddl_text()
-        system_prompt_template = context.f_sql_generator_sqlite_only.read_text()
+        system_prompt_template = context.SQL_GENERATOR_SQLITE_ONLY_FILE.read_text()
         system_prompt = system_prompt_template.format(ddl_text=ddl_text)
         
         messages = [
@@ -100,7 +100,7 @@ class Assistant:
         
         while True:
             resp = self.client.chat(
-                model=context.project_config["ollama"]["code_model"],
+                model=context.CONFIG["ollama"]["code_model"],
                 messages=messages,
                 format=SQLGen.model_json_schema()
             )

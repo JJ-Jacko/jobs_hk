@@ -78,7 +78,7 @@ def fetch_total_pages():
 def run():
     logger = get_logger("search_multi_threads", multi_thread=True)
     lock = threading.Lock()
-    db = DBMT(context.f_project_database, lock)
+    db = DBMT(context.DATA_BASE_FILE, lock)
 
     total_pages = fetch_total_pages()
 
@@ -91,13 +91,13 @@ def run():
     )
     
     proxy_pool = ProxyPool(
-        host=context.project_config["proxy"]["host"],
-        port_start=context.project_config["proxy"]["port_start"],
-        offset=context.project_config["proxy"]["offset"],
+        host=context.CONFIG["proxy"]["host"],
+        port_start=context.CONFIG["proxy"]["port_start"],
+        offset=context.CONFIG["proxy"]["offset"],
         lock=lock
     )
     
-    num_thread = int(context.project_config["proxy"]["offset"] * context.project_config["proxy"]["rate"])
+    num_thread = int(context.CONFIG["proxy"]["offset"] * context.CONFIG["proxy"]["rate"])
     threads = [
         threading.Thread(
             target=worker,
