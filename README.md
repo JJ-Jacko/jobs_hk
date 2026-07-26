@@ -3,9 +3,44 @@
 **Languages:** [简体中文](README_zh_cn.md) | [繁體中文](README_zh_hk.md)
 
 ## 📋 Description
-The Hong Kong Labour Department publishes a large number of job listings publicly, but manually collecting them one by one is highly inefficient. This project aims to automatically aggregate this data in one place, making it easier to analyse and apply for jobs.
+The Hong Kong Labour Department publishes a large number of public job vacancies, but collecting them manually one by one is inefficient, and manual analysis is both costly and time-consuming.
+This project aims to automatically collect these data centrally and make them available through a built-in AI Agent or via `MCP` for market research and unified analysis.
 
-The scraper fetches job listing pages via Python's `requests` library, parses HTML elements with `BeautifulSoup`, and cleans and organises the extracted information using regular expressions. The structured data is then stored in a `SQLite` database.
+## 💡 Key Features
+### 🕷️ High-Concurrency & Resilient Data Collection:
+* **Multi-mode Parallel Crawling**: Supports both conventional `single-threaded` crawling and proxy-based `multi-threaded concurrent` crawling, significantly improving data collection efficiency.
+* **Dynamic Proxy Pool Management**:
+    Built-in `proxy pool` allocator designed for `sing-box`,
+    supporting proxy availability checks, dynamic scoring, and intelligent allocation,
+    effectively overcoming per-IP request rate limits and automatically switching away from unavailable proxy nodes.
+### 📊 Structured Data Processing & Persistence
+* **High-Precision Data Extraction**:
+    Combines `BeautifulSoup` and `Regular Expressions` for deep HTML extraction.
+    Accurately cleans and standardizes key fields such as job titles, salary ranges, work locations, and job requirements.
+* **Lightweight Database Storage**:
+    Automatically archives structured data into a `SQLite` database.
+    Builds indexes to provide low-latency local querying and persistent storage.
+### 🤖 AI Agent & Text-to-SQL:
+* **Text-to-SQL Pipeline**:
+    Combines local `Ollama` LLMs to convert natural language into SQL,
+    adopting an automatic correction workflow of `SQL Generator ➔ Runner ➔ Checker`,
+    enabling accurate multidimensional statistical analysis of the collected data.
+* **MCP Integration**:
+    Exposes interfaces supporting VSCode Github Copilot, Claude Desktop, and more,
+    allowing direct access from fully featured AI clients with powerful models.
+* **Context Engineering**:
+    Combines database table `DDL`, prompt engineering `prompts`, and `Few-Shot` examples,
+    to guide the model with structured reasoning paths and comprehensive data context.
+    Finally, `Schemas` are used to constrain the output format, together with `pydantic` validation and automatic retry mechanisms,
+    ensuring the generated JSON output is always valid and compliant.
+* **SQL Security Auditing & Self-Correction**:
+    After the model generates SQL, the system performs security validation immediately.
+    Destructive write operations such as INSERT/UPDATE/DELETE/DROP are strictly blocked, allowing only SELECT queries.
+    If security violations or SQL syntax errors are detected, the error context is fed back to the model for retry and compliant regeneration,
+    ensuring complete database safety and reliable model outputs.
+* **Database Security**:
+    During initialization, the system strictly separates `read-write` and `read-only` database connection instances.
+    Writable connections are used exclusively by the crawler, while the AI Agent accesses the database only through explicitly created read-only connections.
 
 > **Disclaimer:**
 > 1. This project strictly complies with the `robots.txt` specifications and is licensed under the MIT License.
