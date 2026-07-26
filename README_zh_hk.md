@@ -27,6 +27,12 @@ flowchart
         fill_job_mt[并發填充崗位詳情]
     end
 
+    subgraph ProxyPool["🔀 代理池"]
+        check_proxy_availability[測試可用性]
+        evaluate_proxy[評分]
+        assigner[分配器]
+    end
+
     subgraph SQL_pipline["📊 文本轉 SQL 管綫"]
         SQL_generator[SQL 生成器]
         SQL_runner[SQL 運行器]
@@ -42,6 +48,7 @@ flowchart
     subgraph Service["⚙️ 服務"]
         Ollama[Ollama]
         SQLite[(SQLite)]
+        proxy_server["sing-box 代理伺服器"]
     end
 
     subgraph DataSource["🌐 數據源"]
@@ -73,6 +80,12 @@ flowchart
 
     fill_job --> SQLite
     fill_job_mt --> SQLite
+
+    assigner --> search_job_mt
+    assigner --> fill_job_mt
+    assigner --> check_proxy_availability
+    assigner --> evaluate_proxy
+    assigner <--> proxy_server
 ```
 
 ## 🚀 使用方法

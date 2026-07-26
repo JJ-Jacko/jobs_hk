@@ -27,6 +27,12 @@ flowchart
         fill_job_mt[Fill Job Details MT]
     end
 
+    subgraph ProxyPool["🔀 Proxy Pool"]
+        check_proxy_availability[Check for Availability]
+        evaluate_proxy[Evaluate]
+        assigner[Assigner]
+    end
+
     subgraph SQL_pipline["📊 Text-to-SQL Pipline"]
         SQL_generator[SQL Generator]
         SQL_runner[SQL Runner]
@@ -42,6 +48,7 @@ flowchart
     subgraph Service["⚙️ Service"]
         Ollama[Ollama]
         SQLite[(SQLite)]
+        proxy_server["sing-box Proxy Server"]
     end
 
     subgraph DataSource["🌐 Data Source"]
@@ -73,6 +80,12 @@ flowchart
 
     fill_job --> SQLite
     fill_job_mt --> SQLite
+
+    assigner --> search_job_mt
+    assigner --> fill_job_mt
+    assigner --> check_proxy_availability
+    assigner --> evaluate_proxy
+    assigner <--> proxy_server
 ```
 
 ## 🚀 Usage
