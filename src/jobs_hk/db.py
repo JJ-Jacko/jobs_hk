@@ -64,6 +64,15 @@ class DB:
     def __init__(self, database_file: Path):
         engine = create_engine(f"sqlite:///{str(database_file)}")
         self.engine = engine
+        
+        if not database_file.exists():
+            self.__create_database()
+    
+    @db_retry
+    def __create_database(self):
+        Job.metadata.create_all(self.engine)
+        Company.metadata.create_all(self.engine)
+        Contact.metadata.create_all(self.engine)
     
     @db_retry
     def save_company(

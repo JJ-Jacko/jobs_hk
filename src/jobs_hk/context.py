@@ -1,7 +1,5 @@
 from pathlib import Path
 
-from jobs_hk.env import get_engine
-from jobs_hk.env import init_database
 from jobs_hk.other import load_config
 
 
@@ -26,6 +24,3 @@ f_project_assistant = d_prompts / "project_assistant.md"
 
 # Initialization
 project_config = load_config(f_project_config)
-
-# engine = get_engine()
-# init_database(engine)
