@@ -47,8 +47,8 @@ def db_retry(func):
             
             try:
                 result = func(*args, **kwargs)
-            except sqlalchemy.OperationalError:
-                time.sleep(10)
+            except sqlalchemy.exc.OperationalError:
+                time.sleep(3)
                 continue
             
             break
