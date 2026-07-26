@@ -1,10 +1,12 @@
 import functools
 import threading
+from pathlib import Path
 from typing import Any
 from typing import List
 from typing import Dict
 
 import sqlalchemy
+from sqlmodel import create_engine
 from sqlmodel import select
 from sqlmodel import Session
 
@@ -59,7 +61,8 @@ def thread_lock(func):
 class DB:
     engine: sqlalchemy.Engine
     
-    def __init__(self, engine: sqlalchemy.Engine):
+    def __init__(self, database_file: Path):
+        engine = create_engine(f"sqlite:///{str(database_file)}")
         self.engine = engine
     
     @db_retry
@@ -262,10 +265,10 @@ class DBMT(DB):
     
     def __init__(
             self,
-            engine: sqlalchemy.Engine,
+            database_file: Path,
             lock: threading.Lock
     ):
-        super().__init__(engine)
+        super().__init__(database_file)
         self.lock = lock
     
     @thread_lock

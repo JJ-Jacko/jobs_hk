@@ -78,7 +78,7 @@ def worker(
 def run():
     logger = get_logger("fill_multi_threads", multi_thread=True)
     lock = threading.Lock()
-    db = DBMT(context.engine, lock)
+    db = DBMT(context.f_project_database, lock)
     
     queue = QueueMT(
         [
