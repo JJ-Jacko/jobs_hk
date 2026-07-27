@@ -91,19 +91,19 @@ flowchart
     CLI <-->|Chat| assistant
     MCP_CLIENT <--> MCP_server
 
+    assistant -->|Descript query| SQL_generator
     assistant <-->|Call/Respond| Ollama
-    assistant --> SQL_generator
 
-    MCP_server --> SQL_generator
+    MCP_server -->|Descript query| SQL_generator
 
-    SQL_generator --> SQL_runner
+    SQL_generator -->|SQL statement| SQL_checker
     SQL_generator <-->|Call/Respond| Ollama
 
-    SQL_runner --> SQL_checker
-    SQL_runner <-->|Call/Respond| SQLite
+    SQL_checker -->|Legal SQL statement| SQL_runner
 
-    SQL_checker --> assistant
-    SQL_checker --> MCP_server
+    SQL_runner -->|Data| assistant
+    SQL_runner -->|Data| MCP_server
+    SQL_runner <-->|Call/Respond| SQLite
 
     web_src -->|Crawling| search_job
     web_src -->|Crawling| fill_job
@@ -127,8 +127,8 @@ flowchart
     class SQLite green;
     class proxy_server orange;
 
-    linkStyle 2,6 stroke:#7C3AED,stroke-width:2px
-    linkStyle 8,15,16,17,18 stroke:#10B981,stroke-width:2px
+    linkStyle 3,6 stroke:#7C3AED,stroke-width:2px
+    linkStyle 10,15,16,17,18 stroke:#10B981,stroke-width:2px
     linkStyle 21 stroke:#F59E0B,stroke-width:2px
 ```
 

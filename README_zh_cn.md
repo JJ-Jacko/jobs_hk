@@ -91,19 +91,19 @@ flowchart
     CLI <-->|聊天| assistant
     MCP_CLIENT <--> MCP_server
 
+    assistant -->|描述查询| SQL_generator
     assistant <-->|调用/响应| Ollama
-    assistant --> SQL_generator
 
-    MCP_server --> SQL_generator
+    MCP_server -->|描述查询| SQL_generator
 
-    SQL_generator --> SQL_runner
+    SQL_generator -->|SQL 语句| SQL_checker
     SQL_generator <-->|调用/响应| Ollama
 
-    SQL_runner --> SQL_checker
-    SQL_runner <-->|调用/响应| SQLite
+    SQL_checker -->|合法的 SQL 语句| SQL_runner
 
-    SQL_checker --> assistant
-    SQL_checker --> MCP_server
+    SQL_runner -->|数据| assistant
+    SQL_runner -->|数据| MCP_server
+    SQL_runner <-->|调用/响应| SQLite
 
     web_src -->|爬取| search_job
     web_src -->|爬取| fill_job
@@ -127,8 +127,8 @@ flowchart
     class SQLite green;
     class proxy_server orange;
 
-    linkStyle 2,6 stroke:#7C3AED,stroke-width:2px
-    linkStyle 8,15,16,17,18 stroke:#10B981,stroke-width:2px
+    linkStyle 3,6 stroke:#7C3AED,stroke-width:2px
+    linkStyle 10,15,16,17,18 stroke:#10B981,stroke-width:2px
     linkStyle 21 stroke:#F59E0B,stroke-width:2px
 ```
 
