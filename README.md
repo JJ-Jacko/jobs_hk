@@ -73,7 +73,7 @@ flowchart
     end
 
     subgraph AI["🤖 AI Agent"]
-        chat[Chat]
+        assistant[Assistant]
         MCP_server[MCP Server]
         SQL_pipline
     end
@@ -88,11 +88,11 @@ flowchart
         web_src[Hong Kong Labour Department]
     end
 
-    CLI <--> chat
+    CLI <-->|Chat| assistant
     MCP_CLIENT <--> MCP_server
 
-    chat <--> Ollama
-    chat --> SQL_generator
+    assistant <--> Ollama
+    assistant --> SQL_generator
 
     MCP_server --> SQL_generator
 
@@ -102,7 +102,7 @@ flowchart
     SQL_runner --> SQL_checker
     SQL_runner <--> SQLite
 
-    SQL_checker --> chat
+    SQL_checker --> assistant
     SQL_checker --> MCP_server
 
     web_src --> search_job
