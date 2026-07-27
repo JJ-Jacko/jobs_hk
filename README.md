@@ -91,16 +91,16 @@ flowchart
     CLI <-->|Chat| assistant
     MCP_CLIENT <--> MCP_server
 
-    assistant <--> Ollama
+    assistant <-->|Call/Respond| Ollama
     assistant --> SQL_generator
 
     MCP_server --> SQL_generator
 
     SQL_generator --> SQL_runner
-    SQL_generator <--> Ollama
+    SQL_generator <-->|Call/Respond| Ollama
 
     SQL_runner --> SQL_checker
-    SQL_runner <--> SQLite
+    SQL_runner <-->|Call/Respond| SQLite
 
     SQL_checker --> assistant
     SQL_checker --> MCP_server
@@ -117,7 +117,7 @@ flowchart
 
     assigner -->|Assign proxy| search_job_mt
     assigner -->|Assign proxy| fill_job_mt
-    assigner <--> proxy_server
+    assigner <-->|Call/Respond| proxy_server
 ```
 
 ## 🚀 Usage

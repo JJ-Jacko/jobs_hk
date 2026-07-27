@@ -91,16 +91,16 @@ flowchart
     CLI <-->|聊天| assistant
     MCP_CLIENT <--> MCP_server
 
-    assistant <--> Ollama
+    assistant <-->|调用/响应| Ollama
     assistant --> SQL_generator
 
     MCP_server --> SQL_generator
 
     SQL_generator --> SQL_runner
-    SQL_generator <--> Ollama
+    SQL_generator <-->|调用/响应| Ollama
 
     SQL_runner --> SQL_checker
-    SQL_runner <--> SQLite
+    SQL_runner <-->|调用/响应| SQLite
 
     SQL_checker --> assistant
     SQL_checker --> MCP_server
@@ -117,7 +117,7 @@ flowchart
 
     assigner -->|分配代理| search_job_mt
     assigner -->|分配代理| fill_job_mt
-    assigner <--> proxy_server
+    assigner <-->|调用/响应| proxy_server
 ```
 
 ## 🚀 使用方法
