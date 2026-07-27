@@ -63,9 +63,7 @@ flowchart
     end
 
     subgraph ProxyPool["🔀 代理池"]
-        check_proxy_availability[测试可用性]
-        evaluate_proxy[评分]
-        assigner[分配器]
+        assigner[分配器<br><strong>测试可用性、评分、分配<strong/>]
     end
 
     subgraph SQL_pipline["📊 文本转 SQL 管线"]
@@ -116,10 +114,8 @@ flowchart
     fill_job --> SQLite
     fill_job_mt --> SQLite
 
-    assigner --> search_job_mt
-    assigner --> fill_job_mt
-    assigner --> check_proxy_availability
-    assigner --> evaluate_proxy
+    assigner -->|分配代理| search_job_mt
+    assigner -->|分配代理| fill_job_mt
     assigner <--> proxy_server
 ```
 

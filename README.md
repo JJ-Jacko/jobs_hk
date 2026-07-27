@@ -63,9 +63,7 @@ flowchart
     end
 
     subgraph ProxyPool["🔀 Proxy Pool"]
-        check_proxy_availability[Check for Availability]
-        evaluate_proxy[Evaluate]
-        assigner[Assigner]
+        assigner[Assigner<br><strong>Check for Availability, Evaluate, Assign<strong/>]
     end
 
     subgraph SQL_pipline["📊 Text-to-SQL Pipline"]
@@ -116,10 +114,8 @@ flowchart
     fill_job --> SQLite
     fill_job_mt --> SQLite
 
-    assigner --> search_job_mt
-    assigner --> fill_job_mt
-    assigner --> check_proxy_availability
-    assigner --> evaluate_proxy
+    assigner -->|Assign proxy| search_job_mt
+    assigner -->|Assign proxy| fill_job_mt
     assigner <--> proxy_server
 ```
 
