@@ -118,6 +118,18 @@ flowchart
     assigner -->|分配代理| search_job_mt
     assigner -->|分配代理| fill_job_mt
     assigner <-->|調用/響應| proxy_server
+
+    classDef purple fill:#F3E8FF,stroke:#7C3AED,color:#4C1D95;
+    classDef green fill:#ECFDF5,stroke:#10B981,color:#065F46;
+    classDef orange fill:#FFF7ED,stroke:#F59E0B,color:#92400E;
+
+    class Ollama purple;
+    class SQLite green;
+    class proxy_server orange;
+
+    linkStyle 2,6 stroke:#7C3AED,stroke-width:2px
+    linkStyle 8,15,16,17,18 stroke:#10B981,stroke-width:2px
+    linkStyle 21 stroke:#F59E0B,stroke-width:2px
 ```
 
 ## 🚀 使用方法
