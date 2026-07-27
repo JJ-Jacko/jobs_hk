@@ -6,6 +6,11 @@
 The Hong Kong Labour Department publishes a large number of public job vacancies, but collecting them manually one by one is inefficient, and manual analysis is both costly and time-consuming.
 This project aims to automatically collect these data centrally and make them available through a built-in AI Agent or via `MCP` for market research and unified analysis.
 
+> **Disclaimer:**
+> 1. This project strictly complies with the `robots.txt` specifications and is licensed under the MIT License.
+> 2. Any third-party forks or derivative works based on this project represent the independent actions of their respective developers and have no association with this project or the original author.
+> 3. Developers shall be solely responsible for any legal liability arising from the use or modification of this source code.
+
 ## 💡 Key Highlights
 ### 🕷️ High-Concurrency & Resilient Data Collection:
 * **Multi-mode Parallel Crawling**: Supports both conventional `single-threaded` crawling and proxy-based `multi-threaded concurrent` crawling, significantly improving data collection efficiency.
@@ -41,11 +46,6 @@ This project aims to automatically collect these data centrally and make them av
 * **Database Security**:
     During initialization, the system strictly separates `read-write` and `read-only` database connection instances.
     Writable connections are used exclusively by the crawler, while the AI Agent accesses the database only through explicitly created read-only connections.
-
-> **Disclaimer:**
-> 1. This project strictly complies with the `robots.txt` specifications and is licensed under the MIT License.
-> 2. Any third-party forks or derivative works based on this project represent the independent actions of their respective developers and have no association with this project or the original author.
-> 3. Developers shall be solely responsible for any legal liability arising from the use or modification of this source code.
 
 ## 🏗️ Structure
 ```mermaid
