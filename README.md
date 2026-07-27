@@ -57,8 +57,8 @@ flowchart
 
     subgraph Scraper["🕷️ Web Scraper"]
         search_job[Search Jobs]
-        search_job_mt[Search Jobs MT]
         fill_job[Fill Job Details]
+        search_job_mt[Search Jobs MT]
         fill_job_mt[Fill Job Details MT]
     end
 
@@ -105,14 +105,15 @@ flowchart
     SQL_checker --> assistant
     SQL_checker --> MCP_server
 
-    web_src --> search_job
-    web_src --> search_job_mt
+    web_src -->|Crawling| search_job
+    web_src -->|Crawling| fill_job
+    web_src -->|Crawling| search_job_mt
+    web_src -->|Crawling| fill_job_mt
 
-    search_job --> fill_job
-    search_job_mt --> fill_job_mt
-
-    fill_job --> SQLite
-    fill_job_mt --> SQLite
+    search_job -->|Save| SQLite
+    fill_job -->|Save| SQLite
+    search_job_mt -->|Save| SQLite
+    fill_job_mt -->|Save| SQLite
 
     assigner -->|Assign proxy| search_job_mt
     assigner -->|Assign proxy| fill_job_mt

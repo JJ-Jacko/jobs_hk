@@ -57,8 +57,8 @@ flowchart
 
     subgraph Scraper["🕷️ 网络爬虫"]
         search_job[搜索岗位]
-        search_job_mt[并发搜索岗位]
         fill_job[填充岗位详情]
+        search_job_mt[并发搜索岗位]
         fill_job_mt[并发填充岗位详情]
     end
 
@@ -105,14 +105,15 @@ flowchart
     SQL_checker --> assistant
     SQL_checker --> MCP_server
 
-    web_src --> search_job
-    web_src --> search_job_mt
+    web_src -->|爬取| search_job
+    web_src -->|爬取| fill_job
+    web_src -->|爬取| search_job_mt
+    web_src -->|爬取| fill_job_mt
 
-    search_job --> fill_job
-    search_job_mt --> fill_job_mt
-
-    fill_job --> SQLite
-    fill_job_mt --> SQLite
+    search_job -->|保存| SQLite
+    fill_job -->|保存| SQLite
+    search_job_mt -->|保存| SQLite
+    fill_job_mt -->|保存| SQLite
 
     assigner -->|分配代理| search_job_mt
     assigner -->|分配代理| fill_job_mt
