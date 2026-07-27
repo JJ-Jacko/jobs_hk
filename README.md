@@ -6,7 +6,7 @@
 The Hong Kong Labour Department publishes a large number of public job vacancies, but collecting them manually one by one is inefficient, and manual analysis is both costly and time-consuming.
 This project aims to automatically collect these data centrally and make them available through a built-in AI Agent or via `MCP` for market research and unified analysis.
 
-## 💡 Key Features
+## 💡 Key Highlights
 ### 🕷️ High-Concurrency & Resilient Data Collection:
 * **Multi-mode Parallel Crawling**: Supports both conventional `single-threaded` crawling and proxy-based `multi-threaded concurrent` crawling, significantly improving data collection efficiency.
 * **Dynamic Proxy Pool Management**:
