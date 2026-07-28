@@ -66,7 +66,7 @@ flowchart
         assigner[Assigner<br><strong>Check for Availability, Evaluate, Assign<strong/>]
     end
 
-    subgraph SQL_pipline["📊 Text-to-SQL Pipline"]
+    subgraph SQL_pipeline["📊 Text-to-SQL Pipeline"]
         SQL_generator[SQL Generator]
         SQL_runner[SQL Runner]
         SQL_checker[SQL Checker]
@@ -75,7 +75,7 @@ flowchart
     subgraph AI["🤖 AI Agent"]
         assistant[Assistant]
         MCP_server[MCP Server]
-        SQL_pipline
+        SQL_pipeline
     end
 
     subgraph Service["⚙️ Service"]

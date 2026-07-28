@@ -66,7 +66,7 @@ flowchart
         assigner[分配器<br><strong>測試可用性、評分、分配<strong/>]
     end
 
-    subgraph SQL_pipline["📊 文本轉 SQL 管綫"]
+    subgraph SQL_pipeline["📊 文本轉 SQL 管綫"]
         SQL_generator[SQL 生成器]
         SQL_runner[SQL 運行器]
         SQL_checker[SQL 檢查器]
@@ -75,7 +75,7 @@ flowchart
     subgraph AI["🤖 智能體"]
         assistant[智能助理]
         MCP_server[MCP 伺服端]
-        SQL_pipline
+        SQL_pipeline
     end
 
     subgraph Service["⚙️ 服務"]
