@@ -52,22 +52,22 @@ def worker(
         filter = JobCardFilter(resp.text)
         job_info = filter.get_job_info()
 
-        db.save_company(
+        company_id = db.save_company(
             name=job_info["company_name"],
             industry=job_info["industry"]
         )
-        db.save_contact(
+        contact_id = db.save_contact(
             alias=job_info["alias"],
             phone=job_info["phone"],
             email=job_info["email"]
         )
         db.save_job(
             order=job.order,
-            company_name=job_info["company_name"],
             job_remark=job_info["job_remark"],
             edu_remark=job_info["edu_remark"],
-            contact_alias=job_info["alias"],
-            compensation=job_info["compensation"]
+            compensation=job_info["compensation"],
+            company_id=company_id,
+            contact_id=contact_id,
         )
         
         queue.set_task_status("Completed", task_key)

@@ -350,16 +350,14 @@ class DBMT(DB):
     @thread_lock
     def save_job(
             self,
-            order, name = UNSET, salary_type = UNSET,
-            salary_min = UNSET, salary_max = UNSET, address = UNSET,
-            company_name = UNSET, job_remark = UNSET, edu_remark = UNSET,
-            contact_alias = UNSET, compensation = UNSET
+            order, name = UNSET, salary_type = UNSET, salary_min = UNSET,
+            salary_max = UNSET, address = UNSET, job_remark = UNSET,
+            edu_remark = UNSET, compensation = UNSET, company_id = UNSET, contact_id = UNSET
     ):
         return super().save_job(
-            order, name, salary_type,
-            salary_min, salary_max, address,
-            company_name, job_remark, edu_remark,
-            contact_alias, compensation
+            order, name, salary_type, salary_min, 
+            salary_max, address, job_remark, edu_remark,
+            compensation, company_id, contact_id
         )
     
     @thread_lock
