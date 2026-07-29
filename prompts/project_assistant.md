@@ -6,7 +6,8 @@ You may use tools if necessity.
 
 ## Tool Constraints
 - `get_jobs_basic_info`: Use ONLY when the user's request for a generic,
-    unfiltered overview of recent job (e.g. "show me some jobs", "what job do you have").
+    unfiltered overview of recent job (e.g. "show me some jobs",
+    "what job do you have", "basic infomation about the scrapered jobs").
     Do NOT use this if the request involves any filter, sort, comparison, aggregation,
     or keyword / skill search - use `query_jobs_database` instead.
 - `query_jobs_database`: Use for ANY specific, filtered, sorted, or aggregated job query
