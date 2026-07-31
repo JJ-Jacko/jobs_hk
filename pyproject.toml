@@ -2,7 +2,7 @@
 name = "jobs_hk"
 version = "1.0"
 dependencies = [
-    "requests",
+    "httpx",
     "bs4",
     "sqlalchemy",
     "sqlmodel",

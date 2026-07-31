@@ -3,8 +3,9 @@ import itertools
 import socket
 import time
 
-import requests
+import httpx
 
+from jobs_hk import context
 from jobs_hk.exceptions import WebRetryExansted
 
 
@@ -32,10 +33,10 @@ def web_retry(func):
                 raise WebRetryExansted("Web connection failed after multiple retries")
             
             try:
-                resp: requests.Response = func(*args, **kwargs)
+                resp: httpx.Response = func(*args, **kwargs)
             except (
-                requests.exceptions.ConnectionError,
-                requests.exceptions.ReadTimeout
+                httpx.ConnectError,
+                httpx.ConnectTimeout
             ):
                 time.sleep(3)
                 continue
@@ -64,44 +65,56 @@ def proxy_server_active(
 
 
 class JobGovHK:
-    s: requests.Session
+    client: httpx.Client
     
     def __init__(self):
-        self.s = requests.session()
-        self.s.headers["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
+        self.client = None
+        self.__reset_client()
+
+    def __reset_client(
+            self,
+            porxy_url: str = None
+    ):
+        headers = {
+            "User-Agent": context.USER_AGENT
+        }
+    
+        if isinstance(self.client, httpx.Client):
+            self.client.close()
+        
+        self.client = httpx.Client(
+            base_url=context.BASE_URL,
+            headers=headers,
+            proxy=porxy_url
+        )
     
     def set_proxy(
             self,
             host: str,
             port: int
     ):        
-        
-        proxy_url = f"http://{host}:{port}"        
-        self.s.proxies = {
-            "http": proxy_url,
-            "https": proxy_url,
-        }
+        self.__reset_client(f"http://{host}:{port}")
     
     @web_retry
     def job_search(self, page: int = 1):
-        url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobsearch/quickview/fulltime_na"
+        url = "0/tc/jobseeker/jobsearch/quickview/fulltime_na/"
         params = {
             "direct": False,
             "page": page
         }
-        resp = self.s.get(url, params=params)
+        resp = self.client.get(url, params=params)
 
         return resp
 
     @web_retry
     def job_card(self, order: str):
-        url = "https://www1.jobs.gov.hk/0/tc/jobseeker/jobcard/"
+        url = "0/tc/jobseeker/jobcard/"
         params = {
             "order": order,
             "from": "quickview",
             "for": "fulltime_na"
         }
-        resp = self.s.post(url, params=params)
+        resp = self.client.post(url, params=params)
 
         return resp
     

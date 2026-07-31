@@ -10,6 +10,10 @@ __all__ = [
     # Path Container
     "PROMPTS",
 
+    # Web
+    "BASE_URL",
+    "USER_AGENT",
+
     # Config
     "CONFIG"
 ]
@@ -25,6 +29,9 @@ class PROMPTS:
     SQL_GENERATOR = DIR / "sql_generator_sqlite_only.md"
     PROJECT_ASSISTANT = DIR / "project_assistant.md"
 
+# Web
+BASE_URL = "https://www1.jobs.gov.hk"
+USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
 
 # Initialization
 CONFIG = load_config(CONFIG_FILE)
