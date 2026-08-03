@@ -255,7 +255,7 @@ run-ask
 }
 ```
 
-## TODO
+## 📝 TODO
 ⬜ OpenAI SDK 替代 Ollama
 ⬜ 工具调用链路
 ⬜ 对话持久化

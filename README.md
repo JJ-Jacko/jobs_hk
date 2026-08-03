@@ -255,7 +255,7 @@ run-ask
 }
 ```
 
-## TODO
+## 📝 TODO
 ⬜ OpenAI SDK instead of Ollama.
 ⬜ Tool calling path.
 ⬜ Conversation persistence.
