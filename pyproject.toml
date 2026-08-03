@@ -1,6 +1,10 @@
 [project]
 name = "jobs_hk"
 version = "1.0"
+description = "Hong Kong Labour Department Job Listing Scraper & AI Agent"
+authors = [
+    { name = "Jacko", email = "l2982211930@163.com" }
+]
 dependencies = [
     "httpx",
     "bs4",
