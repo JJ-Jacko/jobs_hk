@@ -14,7 +14,7 @@ __all__ = [
     "PROMPTS",
 
     # Web
-    "BASE_URL",
+    "BASE_URLS",
     "USER_AGENT",
 
     # Config
@@ -33,8 +33,10 @@ class PROMPTS:
     PROJECT_ASSISTANT = DIR / "project_assistant.md"
 
 # Web
-BASE_URL = "https://www1.jobs.gov.hk"
-BASE_URL_LLM = "https://api.moonshot.cn/v1"
+class BASE_URLS:
+    JOB_GOV_HK = "https://www1.jobs.gov.hk"
+    MOONSHOT = "https://api.moonshot.cn/v1"
+    
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
 
 # Initialization

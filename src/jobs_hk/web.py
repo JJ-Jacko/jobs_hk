@@ -83,7 +83,7 @@ class JobGovHK:
             self.client.close()
         
         self.client = httpx.Client(
-            base_url=context.BASE_URL,
+            base_url=context.BASE_URLS.JOB_GOV_HK,
             headers=headers,
             proxy=porxy_url
         )
