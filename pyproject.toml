@@ -11,7 +11,9 @@ dependencies = [
     "sqlalchemy",
     "sqlmodel",
     "pydantic",
+    "python-dotenv",
     "ollama",
+    "openai",
     "mcp[cli]",
 ]
 
