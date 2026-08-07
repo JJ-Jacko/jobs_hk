@@ -1,6 +1,6 @@
 from typing import Dict
 
-import ollama
+import openai
 
 import jobs_hk.context as context
 from jobs_hk.exceptions import ModelGenerateException
@@ -14,16 +14,15 @@ __all__ = ["Assistant"]
 
 
 class Assistant:
-    client: ollama.Client
+    client: openai.Client
     db: DB
     tools: Dict[str, function]
 
-    def __init__(
-            self,
-            host: str,
-            db: DB
-    ):
-        self.client = ollama.Client(host)
+    def __init__(self, db: DB):
+        self.client = openai.Client(
+            api_key=context.MOONSHOT_API_KEY,
+            base_url=context.BASE_URLS.MOONSHOT
+        )
         self.db = db
         self.tools = {
             "get_jobs_basic_info": self.db.get_jobs_basic_info,
@@ -99,14 +98,14 @@ class Assistant:
         ]
         
         while True:
-            resp = self.client.chat(
-                model=context.CONFIG["ollama"]["code_model"],
+            completion = self.client.chat.completions.parse(
+                model=context.CONFIG["LLM"]["code_model"],
                 messages=messages,
-                format=SQLGen.model_json_schema()
+                response_format=SQLGen
             )
-            
-            sql_gen = SQLGen.model_validate_json(resp.message.content)
-            messages.append(resp.message)
+            content = completion.choices[0].message.content
+            sql_gen = completion.choices[0].message.parsed
+            messages.append(completion.choices[0].message)
             
             # Check status in rule
             if sql_gen.status not in ["REJECT", "RESPOND_FAIL", "RESPOND_SUCCESS"]:
@@ -129,7 +128,7 @@ class Assistant:
                 
                 raise ModelGenerateException(
                     type="REJECT",
-                    model_content=resp.message.content,
+                    model_content=content,
                     message=(
                         "The request is invalid, malicious, non-query or irrelevant conversational text "
                         "or tries to INSERT/UPDATE/DELETE/DROP these illegal modification."
@@ -150,7 +149,7 @@ class Assistant:
                 
                 raise ModelGenerateException(
                     type="RESPOND_FAIL",
-                    model_content=resp.message.content,
+                    model_content=content,
                     message="The request is a query intent but cannot be fulfilled due to missing data/tables."
                 )
             

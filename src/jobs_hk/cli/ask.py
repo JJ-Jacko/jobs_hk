@@ -5,10 +5,7 @@ from jobs_hk.services.assistant import Assistant
     
 def run():
     db = DB(context.DATA_BASE_FILE, read_only=True)
-    service = Assistant(
-        host=context.CONFIG["ollama"]["host"],
-        db=db
-    )
+    service = Assistant(db)
     
     while True:
         user_prompt = input(">>> ")

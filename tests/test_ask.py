@@ -4,8 +4,9 @@ from typing import Optional
 from unittest import TestCase
 
 import jobs_hk.context as context
-from jobs_hk.cli.ask import Ask
+from jobs_hk.db import DB
 from jobs_hk.exceptions import ModelGenerateException
+from jobs_hk.services.assistant import Assistant
 
 
 prompts = [
@@ -62,7 +63,8 @@ class TestAsk(TestCase):
         task_name = "LLM generate SQL using user_prompts"
         print(f"running {task_name}...")
         
-        service = Ask(context.project_config["ollama"]["host"])
+        db = DB(context.DATA_BASE_FILE, read_only=True)
+        service = Assistant(db)
         
         for data in cls.test_datas:
             print(f"current prompt: {data.prompt}")
