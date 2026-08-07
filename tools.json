@@ -1,0 +1,40 @@
+[
+    {
+        "type": "function",
+        "function": {
+            "name": "get_jobs_basic_info",
+            "description": "Get the Hongkong jobs basic information in the project database.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "num": {
+                        "type": "integer",
+                        "description": "The number of the jobs basic info of Hongkong Jobs database.",
+                        "default": 10
+                    }
+                },
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "query_jobs_database",
+            "description": "Query the database using a natural language descripion. Convert the request into a SQL SELECT statement and executes it, returning matching records or an error description if the query cound not be fulfilled.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "user_prompt": {
+                        "type": "string",
+                        "description": "A direct and explicit description of the data query NOT the SQL statement. (e.g., 'Find jobs with salary upper than 5000'). - CRITICAL: Do NOT use vague or conversational phrasing, or the model will fail."
+                    }
+                },
+                "required": ["user_prompt"],
+                "additionalProperties": false
+            },
+            "strict": true
+        }
+    }
+]

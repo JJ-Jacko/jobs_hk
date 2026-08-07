@@ -1,3 +1,4 @@
+import json
 import re
 import tomllib
 from pathlib import Path
@@ -16,6 +17,12 @@ def keywords_in_text(
             return True
     
     return False
+
+
+def load_json_file(file: str | Path):
+
+    with open(file, "r") as f:
+        return json.load(f)
 
 
 def get_fields_setted(payload: Dict[str, any]):

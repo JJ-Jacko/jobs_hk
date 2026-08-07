@@ -24,6 +24,7 @@ __all__ = [
 
 # Path
 DATA_BASE_FILE = Path("data.db")
+TOOLS_FILE = Path("tools.json")
 CONFIG_FILE = Path("config.toml")
 
 class PROMPTS:

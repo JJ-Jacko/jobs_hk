@@ -1,4 +1,7 @@
+import json
+from typing import Any
 from typing import Dict
+from typing import List
 
 import openai
 
@@ -7,6 +10,7 @@ from jobs_hk.exceptions import ModelGenerateException
 from jobs_hk.exceptions import SQLStatementExecException
 from jobs_hk.db import DB
 from jobs_hk.other import keywords_in_text
+from jobs_hk.other import load_json_file
 from jobs_hk.schemas import SQLGen
 
 
@@ -16,7 +20,7 @@ __all__ = ["Assistant"]
 class Assistant:
     client: openai.Client
     db: DB
-    tools: Dict[str, function]
+    tools: List[Dict[str, Any]]
 
     def __init__(self, db: DB):
         self.client = openai.Client(
@@ -24,10 +28,7 @@ class Assistant:
             base_url=context.BASE_URLS.MOONSHOT
         )
         self.db = db
-        self.tools = {
-            "get_jobs_basic_info": self.db.get_jobs_basic_info,
-            "query_jobs_database": self.query_jobs_database
-        }
+        self.tools = load_json_file(context.TOOLS_FILE)
 
     def chat(self, user_prompt: str):
         system_prompt = context.PROMPTS.PROJECT_ASSISTANT.read_text()
@@ -43,34 +44,38 @@ class Assistant:
             }
         ]
         
-        resp = self.client.chat(
-            model=context.CONFIG["ollama"]["chat_model"],
+        completion = self.client.chat.completions.create(
+            model=context.CONFIG["LLM"]["chat_model"],
             messages=messages,
-            think=False,
-            tools=self.tools.values()
+            tools=self.tools,
         )
         
-        if resp.message.tool_calls:
-            messages.append(resp.message)
-            for call in resp.message.tool_calls:
-                func = self.tools[call.function.name]
-                res = func(**call.function.arguments)
-                messages.append({
-                    "role": "tool",
-                    "tool_name": call.function.name,
-                    "content": str(res)
-                })
-            
-            resp = self.client.chat(
-                model=context.CONFIG["ollama"]["chat_model"],
-                messages=messages,
-                think=False,
-                options={
-                    "num_ctx": 16 * 1024,
-                }
-            )
+        if (tool_calls := completion.choices[0].message.tool_calls):
+            messages.append(completion.choices[0].message)
         
-        return resp.message.content
+            for tool_call in tool_calls:
+                func_name = tool_call.function.name
+                kwargs: Dict[str, Any] = json.loads(tool_call.function.arguments)
+                
+                if func_name == "get_jobs_basic_info":
+                    res = self.db.get_jobs_basic_info(**kwargs)
+                elif func_name == "query_jobs_database":
+                    res = self.query_jobs_database(**kwargs)
+
+                messages.append(
+                    {
+                        "role": "tool",
+                        "tool_call_id": tool_call.id,
+                        "content": str(res),
+                    }
+                )
+
+        completion = self.client.chat.completions.create(
+            model=context.CONFIG["LLM"]["chat_model"],
+            messages=messages
+        )
+        
+        return completion.choices[0].message.content
 
     def generate_sql(self, user_prompt: str) -> str:
         """Generates a SQLite statement from a direct natural language query.
