@@ -18,11 +18,11 @@ dependencies = [
 ]
 
 [project.scripts]
-run-ask = "jobs_hk.cli.ask:run"
-run-search-job = "jobs_hk.cli.search_jobs:run"
-run-search-job-MT = "jobs_hk.cli.search_jobs_multi_thread:run"
-run-fill-job = "jobs_hk.cli.fill_jobs:run"
-run-fill-job-MT = "jobs_hk.cli.fill_jobs_multi_threads:run"
+run-ask             = "jobs_hk.cli.ask:main"
+run-search-job      = "jobs_hk.cli.search_jobs:main"
+run-search-job-MT   = "jobs_hk.cli.search_jobs_multi_thread:main"
+run-fill-job        = "jobs_hk.cli.fill_jobs:main"
+run-fill-job-MT     = "jobs_hk.cli.fill_jobs_multi_threads:main"
 
 [build-system]
 requires = ["hatchling"]

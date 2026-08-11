@@ -75,7 +75,7 @@ def fetch_total_pages():
     return filter.get_total_pages()
 
 
-def run():
+def main():
     logger = get_logger("search_multi_threads", multi_thread=True)
     lock = threading.Lock()
     db = DBMT(context.DATA_BASE_FILE, lock, read_only=False)
@@ -117,3 +117,8 @@ def run():
         time.sleep(3)
     for t in threads:
         t.join()
+
+
+if __name__ == "__main__":
+    main()
+    

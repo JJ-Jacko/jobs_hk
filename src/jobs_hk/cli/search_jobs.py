@@ -8,7 +8,7 @@ from jobs_hk.waiting import Waiting
 from jobs_hk.web import JobGovHK
 
 
-def run():
+def main():
     logger = get_logger("search")
     waiting = Waiting()
     web = JobGovHK()
@@ -36,3 +36,8 @@ def run():
             break
         
         waiting.random()
+
+
+if __name__ == "__main__":
+    main()
+    

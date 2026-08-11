@@ -8,7 +8,7 @@ from jobs_hk.waiting import Waiting
 from jobs_hk.web import JobGovHK
 
 
-def run():
+def main():
     logger = get_logger("fill")
     waiting = Waiting()
     web = JobGovHK()
@@ -47,3 +47,8 @@ def run():
         queue.set_task_status("Completed", task_key)
         queue.set_task_date_time(task_key)
         waiting.random()
+
+
+if __name__ == "__main__":
+    main()
+    
