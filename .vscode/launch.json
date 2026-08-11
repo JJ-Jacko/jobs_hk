@@ -1,0 +1,47 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Ask",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.ask",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Search Jobs",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.search_jobs",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Search Jobs MT",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.search_jobs_multi_thread",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Fill Jobs",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.fill_jobs",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Fill Jobs MT",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.fill_jobs_multi_threads",
+            "console": "internalConsole"
+        },
+        {
+            "name": "Test",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "jobs_hk.cli.test",
+            "console": "internalConsole"
+        },
+    ]
+}
