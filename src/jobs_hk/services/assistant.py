@@ -91,30 +91,23 @@ class Assistant:
         system_prompt_template = context.PROMPTS.SQL_GENERATOR.read_text()
         system_prompt = system_prompt_template.format(ddl_text=ddl_text)
         
-        messages = [
-            {
-                "role": "system",
-                "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ]
+        history = []
         
         while True:
-            completion = self.client.chat.completions.parse(
-                model=context.CONFIG["LLM"]["code_model"],
-                messages=messages,
-                response_format=SQLGen
+            history.append({"role": "user", "content": user_prompt})
+            resp = self.client.responses.parse(
+                model=context.CONFIG["LLM"]["chat_model"],
+                instructions=system_prompt,
+                input=history,
+                text_format=SQLGen
             )
-            content = completion.choices[0].message.content
-            sql_gen = completion.choices[0].message.parsed
-            messages.append(completion.choices[0].message)
+            history.extend(resp.output)
+            content = resp.output_text
+            sql_gen = resp.output_parsed
             
             # Check status in rule
             if sql_gen.status not in ["REJECT", "RESPOND_FAIL", "RESPOND_SUCCESS"]:
-                messages.append({
+                history.append({
                     "role": "user",
                     "content": "Schema violation: `status` MUST fill with REJECT, RESPOND_FAIL and RESPOND_SUCCESS"
                 })
@@ -122,7 +115,7 @@ class Assistant:
             
             if sql_gen.status == "REJECT":
                 if sql_gen.sql is not None and sql_gen.error_message is not None:
-                    messages.append({
+                    history.append({
                         "role": "user",
                         "content": (
                             "Schema violation: If `status` is REJECT, "
@@ -142,7 +135,7 @@ class Assistant:
             
             if sql_gen.status == "RESPOND_FAIL":
                 if sql_gen.sql is not None or sql_gen.error_message is None:
-                    messages.append({
+                    history.append({
                         "role": "user",
                         "content": (
                             "Schema violation: If `status` is RESPOND_FAIL, "
@@ -163,7 +156,7 @@ class Assistant:
                 "SELECT" not in sql_gen.sql
                 or keywords_in_text(["INSERT", "UPDATE", "DELETE", "DROP"], sql_gen.sql)
             ):
-                messages.append({
+                history.append({
                     "role": "user",
                     "content": (
                         "Security/Policy violation: The generated SQL must be a Read-Only 'SELECT' query. "
