@@ -24,7 +24,7 @@ class Assistant:
 
     def __init__(self, db: DB):
         self.client = openai.Client(
-            api_key=context.MOONSHOT_API_KEY,
+            api_key=context.API_KEYS.MOONSHOT,
             base_url=context.BASE_URLS.MOONSHOT
         )
         self.db = db

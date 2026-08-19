@@ -37,11 +37,16 @@ class PROMPTS:
 class BASE_URLS:
     JOB_GOV_HK = "https://www1.jobs.gov.hk"
     MOONSHOT = "https://api.moonshot.cn/v1"
+    DEEPSEEK = "https://api.deepseek.com"
     
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/146.0.0.0 Safari/537.36 Edg/146.0.0.0"
 
 # Initialization
 CONFIG = load_config(CONFIG_FILE)
 
+# Environment
 load_dotenv()
-MOONSHOT_API_KEY = os.environ.get("MOONSHOT_API_KEY", None)
+
+class API_KEYS:
+    MOONSHOT = os.environ.get("MOONSHOT_API_KEY", None)
+    DEEPSEEK = os.environ.get("DEEPSEEK_API_KEY", None)
