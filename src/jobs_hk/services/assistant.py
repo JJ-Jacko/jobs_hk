@@ -33,49 +33,46 @@ class Assistant:
     def chat(self, user_prompt: str):
         system_prompt = context.PROMPTS.PROJECT_ASSISTANT.read_text()
         
-        messages = [
-            {
-                "role": "system",
-                "content": system_prompt
-            },
-            {
-                "role": "user",
-                "content": user_prompt
-            }
-        ]
+        history = []
         
-        completion = self.client.chat.completions.create(
+        history.append({"role": "user", "content": user_prompt})
+        resp = self.client.responses.create(
             model=context.CONFIG["LLM"]["chat_model"],
-            messages=messages,
+            instructions=system_prompt,
             tools=self.tools,
+            input=history
         )
+        history.extend(resp.output)
         
-        if (tool_calls := completion.choices[0].message.tool_calls):
-            messages.append(completion.choices[0].message)
-        
-            for tool_call in tool_calls:
-                func_name = tool_call.function.name
-                kwargs: Dict[str, Any] = json.loads(tool_call.function.arguments)
-                
-                if func_name == "get_jobs_basic_info":
-                    res = self.db.get_jobs_basic_info(**kwargs)
-                elif func_name == "query_jobs_database":
-                    res = self.query_jobs_database(**kwargs)
+        for item in resp.output:
+            if item.type != "function_call":
+                continue
+            
+            func_name = item.name
+            kwargs: Dict[str, Any] = json.loads(item.arguments)
 
-                messages.append(
-                    {
-                        "role": "tool",
-                        "tool_call_id": tool_call.id,
-                        "content": str(res),
-                    }
-                )
+            if func_name == "get_jobs_basic_info":
+                res = self.db.get_jobs_basic_info(**kwargs)
+            elif func_name == "query_jobs_database":
+                res = self.query_jobs_database(**kwargs)
+            else:
+                # TODO: There are no function process
+                raise RuntimeError
+            
+            history.append({
+                "type": "function_call_output",
+                "call_id": item.call_id,
+                "output": str(res),
+            })
 
-        completion = self.client.chat.completions.create(
+        resp = self.client.responses.create(
             model=context.CONFIG["LLM"]["chat_model"],
-            messages=messages
+            instructions=system_prompt,
+            input=history
         )
+        history.extend(resp.output)
         
-        return completion.choices[0].message.content
+        return resp.output_text
 
     def generate_sql(self, user_prompt: str) -> str:
         """Generates a SQLite statement from a direct natural language query.
