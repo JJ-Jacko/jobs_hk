@@ -1,6 +1,6 @@
 [LLM]
-chat_model = "kimi-k2.5"
-code_model = "kimi-k2.7-code"
+chat_model = "deepseek-v4-flash"
+code_model = "deepseek-v4-flash"
 
 [proxy]
 host = "127.0.0.1"

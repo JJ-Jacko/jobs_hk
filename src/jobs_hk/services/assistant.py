@@ -93,7 +93,7 @@ class Assistant:
         while True:
             history.append({"role": "user", "content": user_prompt})
             resp = self.client.responses.parse(
-                model=context.CONFIG["LLM"]["chat_model"],
+                model=context.CONFIG["LLM"]["code_model"],
                 instructions=system_prompt,
                 input=history,
                 text_format=SQLGen
