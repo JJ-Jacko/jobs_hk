@@ -256,7 +256,7 @@ run-ask
 ```
 
 ## 📝 TODO
-⬜ OpenAI SDK 替代 Ollama
+✅ OpenAI SDK 替代 Ollama
 
 ⬜ 工具調用鏈路
 
