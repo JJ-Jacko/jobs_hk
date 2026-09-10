@@ -254,12 +254,3 @@ run-ask
     ]
 }
 ```
-
-## 📝 TODO
-✅ OpenAI SDK instead of Ollama.
-
-⬜ Tool calling path.
-
-⬜ Conversation persistence.
-
-⬜ Codes divided into 3 layers (Infrastructure, Business Logic, Presentation).
